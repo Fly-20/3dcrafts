@@ -11,9 +11,9 @@ const services = [
 ];
 
 const work = [
-  { title: "Contour Series", type: "Product development", className: "visual-one" },
-  { title: "Lightwell", type: "Architectural prototype", className: "visual-two" },
-  { title: "Field Notes", type: "Personalised batch", className: "visual-three" },
+  { title: "Functional parts", type: "Prototypes & practical accessories", src: "/ChatGPT%20Image%20Aug%2025%2C%202026%2C%2010_14_35%20PM.png", alt: "A selection of custom 3D printed functional parts and accessories" },
+  { title: "Sculptural prints", type: "Collectibles & homeware", src: "/ChatGPT%20Image%20Aug%2025%2C%202026%2C%2010_14_41%20PM.png", alt: "Low-poly 3D printed dragon, fox, planter and geometric objects" },
+  { title: "Product prototypes", type: "Models, components & enclosures", src: "/ChatGPT%20Image%20Aug%2025%2C%202026%2C%2010_14_52%20PM.png", alt: "3D printed architectural model, mechanical component, planter and orange enclosure" },
 ];
 
 export default function Home() {
@@ -46,8 +46,7 @@ export default function Home() {
 
         <section className="work section-pad" id="work" aria-labelledby="work-title">
           <div className="work-heading"><div><p className="eyebrow">Selected work</p><h2 id="work-title">A few things<br />we&apos;ve <em>brought to life.</em></h2></div><p>Every project starts differently. Every one ends with something real.</p></div>
-          <div className="work-grid">{work.map((item, index) => <article className={`work-card work-${index + 1}`} key={item.title}><div className={`work-visual ${item.className}`} role="img" aria-label={`Abstract placeholder visual for ${item.title}`}><div className="shape shape-a" /><div className="shape shape-b" /><div className="shape shape-c" /><span className="visual-index">0{index + 1}</span></div><div className="work-meta"><h3>{item.title}</h3><p>{item.type}</p><span><Arrow diagonal /></span></div></article>)}</div>
-          <p className="photo-note">Project imagery shown as art-directed placeholders — ready for your real work.</p>
+          <div className="work-grid">{work.map((item, index) => <article className={`work-card work-${index + 1}`} key={item.title}><div className="work-visual"><Image src={item.src} alt={item.alt} fill sizes={index === 0 ? "(max-width: 600px) 100vw, 62vw" : index === 1 ? "(max-width: 600px) 100vw, 36vw" : "(max-width: 600px) 100vw, 62vw"} /><span className="visual-index" aria-hidden="true">0{index + 1}</span></div><div className="work-meta"><h3>{item.title}</h3><p>{item.type}</p><span><Arrow diagonal /></span></div></article>)}</div>
         </section>
 
         <section className="process section-pad" id="process" aria-labelledby="process-title">
