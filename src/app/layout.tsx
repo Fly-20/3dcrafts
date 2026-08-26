@@ -3,12 +3,12 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://3dcrafts.uk"),
-  title: "3DCRAFTS | 3D Printing & Laser Craft, Edinburgh",
-  description: "Custom 3D printing, rapid prototyping, small-batch production, laser cutting and engraving from an independent Edinburgh workshop.",
+  title: "3DCRAFTS | 3D Printing & Laser Craft",
+  description: "Custom 3D printing, rapid prototyping, small-batch production, laser cutting and engraving from an independent workshop.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "3DCRAFTS | 3D Printing & Laser Craft, Edinburgh",
-    description: "Custom 3D printing, rapid prototyping, small-batch production, laser cutting and engraving from an independent Edinburgh workshop.",
+    title: "3DCRAFTS | 3D Printing & Laser Craft",
+    description: "Custom 3D printing, rapid prototyping, small-batch production, laser cutting and engraving from an independent workshop.",
     url: "/",
     siteName: "3DCRAFTS",
     locale: "en_GB",

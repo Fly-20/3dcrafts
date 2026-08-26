@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 310" role="img" aria-labelledby="title">
+  <title id="title">3DCRAFTS</title>
+  <defs>
+    <linearGradient id="orange" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#ff8a00"/><stop offset="1" stop-color="#ff3d00"/></linearGradient>
+  </defs>
+  <g fill="none" stroke="#fff" stroke-linejoin="round" stroke-width="25">
+    <path d="m142 34-98 59 98 59 98-59z"/><path d="m44 111 98 59 98-59v47l-98 59-98-59z"/><path d="m44 177 98 59 98-59v47l-98 59-98-59z"/><path d="M142 152v119"/>
+  </g>
+  <path fill="url(#orange)" d="M136 0h15v100l43 47-44-14-8 40-8-40-45 14 43-47V0z"/><path fill="url(#orange)" d="m240 147-77 46v42l77-46z"/>
+  <text x="278" y="226" fill="#fff" font-family="Arial Black,Arial,sans-serif" font-size="142" font-weight="900" letter-spacing="-10">3DCRAFTS</text>
+  <text x="278" y="226" fill="url(#orange)" font-family="Arial Black,Arial,sans-serif" font-size="142" font-weight="900" letter-spacing="-10">3D</text>
+</svg>
