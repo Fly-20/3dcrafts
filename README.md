@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Quote form delivery
 
-The quote form sends submissions and attachments through [Resend](https://resend.com). Copy `.env.example` to `.env.local`, add a Resend API key, and use a verified sender address for `QUOTE_FROM_EMAIL`. Without this configuration, the form shows the visible `hello@3dcrafts.uk` email fallback.
+The quote form sends submissions and attachments through [Resend](https://resend.com) and posts a matching notification to Discord. Copy `.env.example` to `.env.local`, add a Resend API key, use a verified sender address for `QUOTE_FROM_EMAIL`, and add an incoming Discord webhook URL. Keep all of these values private. Without this configuration, the form shows the visible `hello@3dcrafts.uk` email fallback.
 
 ## Getting Started
 
