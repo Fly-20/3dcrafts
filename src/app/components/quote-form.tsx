@@ -41,7 +41,7 @@ export function QuoteForm() {
         <label>Deadline<input name="deadline" type="date" required /></label>
         <label className="field-wide file-field">Files <span>STL, STEP, SVG, images or sketches — up to 10 MB each</span><input name="files" type="file" multiple accept=".stl,.step,.stp,.svg,.png,.jpg,.jpeg,.webp,.pdf" /></label>
       </div>
-      <div className="quote-form-footer"><button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Request a quote"}</button><p>Prefer email? <a href="mailto:hello@3dcrafts.uk">hello@3dcrafts.uk</a></p></div>
+      <div className="quote-form-footer"><button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Submit message"}</button></div>
       {status !== "idle" && <p className={`form-status ${status}`} role="status">{message}</p>}
     </form>
   );

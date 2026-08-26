@@ -29,7 +29,11 @@ export default function Home() {
 
       <main id="main-content">
         <section className="hero" id="top" aria-labelledby="hero-title">
-          <Image className="hero-image" src="/ChatGPT%20Image%20Aug%2026%2C%202026%2C%2012_31_07%20PM.png" alt="Lime green low-poly 3D printed fox" fill sizes="100vw" priority />
+          <div className="hero-showcase" role="img" aria-label="Examples of custom 3D printed creations">
+            <Image className="hero-slide hero-slide-one" src="/ChatGPT%20Image%20Aug%2026%2C%202026%2C%2001_30_24%20PM.png" alt="" fill sizes="(max-width: 600px) 72vw, (max-width: 900px) 56vw, 38vw" priority />
+            <Image className="hero-slide hero-slide-two" src="/ChatGPT%20Image%20Aug%2026%2C%202026%2C%2001_39_52%20PM.png" alt="" fill sizes="(max-width: 600px) 72vw, (max-width: 900px) 56vw, 38vw" loading="eager" />
+            <Image className="hero-slide hero-slide-three" src="/ChatGPT%20Image%20Aug%2026%2C%202026%2C%2001_13_49%20PM.png" alt="" fill sizes="(max-width: 600px) 72vw, (max-width: 900px) 56vw, 38vw" loading="eager" />
+          </div>
           <div className="hero-kicker reveal"><span className="status-dot" /> Independent workshop</div>
           <h1 id="hero-title" className="reveal reveal-delay-1">Ideas,<br /><em>made physical.</em></h1>
           <div className="hero-bottom reveal reveal-delay-2"><p>Custom 3D printing and laser craft for people with a sketch, a problem, or a brilliant idea.</p><a href="#quote" className="text-link">Start your project <Arrow /></a></div>
@@ -60,7 +64,7 @@ export default function Home() {
         <section className="quote section-pad" id="quote" aria-labelledby="quote-title"><p className="eyebrow">Have something in mind?</p><h2 id="quote-title">Let&apos;s make<br /><em>something real.</em></h2><p className="quote-copy">Tell us what you&apos;re thinking. We&apos;ll come back with practical advice and clear next steps — usually within one working day.</p><QuoteForm /><div className="quote-details"><span>UK-wide delivery</span><span>No minimum order</span></div></section>
       </main>
 
-      <footer className="footer"><div className="footer-main"><a href="#top" className="footer-brand" aria-label="3DCRAFTS, back to top"><Image src="/3dcrafts-footer-logo.svg" alt="3DCRAFTS" width={1200} height={310} unoptimized /></a><div><p>Digital precision.<br />Made with care.</p></div><nav aria-label="Footer navigation"><a href="#services">Services</a><a href="#work">Work</a><a href="#process">Process</a><a href="#quote">Request a quote</a></nav><address><a href="mailto:hello@3dcrafts.uk">hello@3dcrafts.uk</a><a href="https://3dcrafts.uk">3dcrafts.uk</a></address></div><div className="footer-bottom"><span>© 2026 3DCRAFTS. All rights reserved.</span><span>Made here. Made well.</span><a href="#top">Back to top ↑</a></div></footer>
+      <footer className="footer"><div className="footer-main"><a href="#top" className="footer-brand" aria-label="3DCRAFTS, back to top"><Image src="/3dcrafts-footer-logo.svg" alt="3DCRAFTS" width={1200} height={310} unoptimized /></a><div><p>Digital precision.<br />Made with care.</p></div><nav aria-label="Footer navigation"><a href="#services">Services</a><a href="#work">Work</a><a href="#process">Process</a><a href="#quote">Request a quote</a></nav><address><a href="mailto:hello@3dcrafts.uk">hello@3dcrafts.uk</a><a href="https://3dcrafts.uk">3dcrafts.uk</a></address></div><div className="footer-bottom"><span>© 2026 3DCRAFTS. All rights reserved.</span><a href="#top">Back to top ↑</a></div></footer>
     </>
   );
 }
