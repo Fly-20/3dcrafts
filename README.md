@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Quote form delivery
+
+The quote form sends submissions and attachments through [Resend](https://resend.com). Copy `.env.example` to `.env.local`, add a Resend API key, and use a verified sender address for `QUOTE_FROM_EMAIL`. Without this configuration, the form shows the visible `hello@3dcrafts.uk` email fallback.
+
 ## Getting Started
 
 First, run the development server:

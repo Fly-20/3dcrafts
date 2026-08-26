@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { QuoteForm } from "./components/quote-form";
 
 const Arrow = ({ diagonal = false }: { diagonal?: boolean }) => (
   <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="arrow-icon"><path d={diagonal ? "M6 18 18 6M9 6h9v9" : "M5 12h14m-5-5 5 5-5 5"} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -23,15 +24,15 @@ export default function Home() {
       <header className="site-header">
         <a href="#top" className="brand" aria-label="3DCRAFTS, home"><Image src="/3dcrafts-logo.svg" alt="3DCRAFTS" width={1200} height={310} priority unoptimized /></a>
         <nav aria-label="Primary navigation" className="desktop-nav"><a href="#services">Services</a><a href="#work">Selected work</a><a href="#process">Process</a></nav>
-        <a href="#quote" className="nav-cta">Contact us <Arrow /></a>
+        <a href="#quote" className="nav-cta">Request a quote <Arrow /></a>
       </header>
 
       <main id="main-content">
         <section className="hero" id="top" aria-labelledby="hero-title">
+          <Image className="hero-image" src="/ChatGPT%20Image%20Aug%2026%2C%202026%2C%2012_31_07%20PM.png" alt="Lime green low-poly 3D printed fox" fill sizes="100vw" priority />
           <div className="hero-kicker reveal"><span className="status-dot" /> Independent workshop</div>
           <h1 id="hero-title" className="reveal reveal-delay-1">Ideas,<br /><em>made physical.</em></h1>
           <div className="hero-bottom reveal reveal-delay-2"><p>Custom 3D printing and laser craft for people with a sketch, a problem, or a brilliant idea.</p><a href="#quote" className="text-link">Start your project <Arrow /></a></div>
-          <div className="hero-object" aria-hidden="true"><div className="object-ring ring-one" /><div className="object-ring ring-two" /><div className="object-core" /></div>
           <div className="scroll-note" aria-hidden="true">Scroll to explore <span>↓</span></div>
         </section>
 
@@ -56,10 +57,10 @@ export default function Home() {
 
         <section className="materials section-pad" aria-labelledby="materials-title"><div className="materials-copy"><p className="eyebrow light">Materials &amp; uses</p><h2 id="materials-title">The right material<br />makes the <em>difference.</em></h2><p>Not sure what you need? That&apos;s part of the service. We&apos;ll recommend the best combination of material, process and finish for your project.</p><a href="#quote" className="text-link lime-link">Talk materials with us <Arrow /></a></div><div className="materials-lists"><div><h3>Materials</h3><ul><li>PLA &amp; recycled PLA</li><li>PETG &amp; engineering polymers</li><li>Resin</li><li>Acrylic &amp; laminates</li><li>Plywood &amp; solid timber</li><li>Card, paper &amp; leather</li></ul></div><div><h3>Made for</h3><ul><li>Product prototypes</li><li>Replacement parts</li><li>Architectural models</li><li>Retail &amp; event displays</li><li>Brand merchandise</li><li>Personalised gifts</li></ul></div></div></section>
 
-        <section className="quote section-pad" id="quote" aria-labelledby="quote-title"><p className="eyebrow">Have something in mind?</p><h2 id="quote-title">Let&apos;s make<br /><em>something real.</em></h2><p className="quote-copy">Tell us what you&apos;re thinking. We&apos;ll come back with practical advice and clear next steps — usually within one working day.</p><a className="quote-button" href="mailto:hello@3dcrafts.uk?subject=Project%20enquiry">Contact us <Arrow diagonal /></a><div className="quote-details"><span>UK-wide delivery</span><span>No minimum order</span></div></section>
+        <section className="quote section-pad" id="quote" aria-labelledby="quote-title"><p className="eyebrow">Have something in mind?</p><h2 id="quote-title">Let&apos;s make<br /><em>something real.</em></h2><p className="quote-copy">Tell us what you&apos;re thinking. We&apos;ll come back with practical advice and clear next steps — usually within one working day.</p><QuoteForm /><div className="quote-details"><span>UK-wide delivery</span><span>No minimum order</span></div></section>
       </main>
 
-      <footer className="footer"><div className="footer-main"><a href="#top" className="footer-brand" aria-label="3DCRAFTS, back to top"><Image src="/3dcrafts-footer-logo.svg" alt="3DCRAFTS" width={1200} height={310} unoptimized /></a><div><p>Digital precision.<br />Made with care.</p></div><nav aria-label="Footer navigation"><a href="#services">Services</a><a href="#work">Work</a><a href="#process">Process</a><a href="#quote">Contact us</a></nav><address><a href="mailto:hello@3dcrafts.uk">hello@3dcrafts.uk</a><a href="https://3dcrafts.uk">3dcrafts.uk</a></address></div><div className="footer-bottom"><span>© 2026 3DCRAFTS. All rights reserved.</span><span>Made here. Made well.</span><a href="#top">Back to top ↑</a></div></footer>
+      <footer className="footer"><div className="footer-main"><a href="#top" className="footer-brand" aria-label="3DCRAFTS, back to top"><Image src="/3dcrafts-footer-logo.svg" alt="3DCRAFTS" width={1200} height={310} unoptimized /></a><div><p>Digital precision.<br />Made with care.</p></div><nav aria-label="Footer navigation"><a href="#services">Services</a><a href="#work">Work</a><a href="#process">Process</a><a href="#quote">Request a quote</a></nav><address><a href="mailto:hello@3dcrafts.uk">hello@3dcrafts.uk</a><a href="https://3dcrafts.uk">3dcrafts.uk</a></address></div><div className="footer-bottom"><span>© 2026 3DCRAFTS. All rights reserved.</span><span>Made here. Made well.</span><a href="#top">Back to top ↑</a></div></footer>
     </>
   );
 }
