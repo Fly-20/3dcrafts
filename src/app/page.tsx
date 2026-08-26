@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { MobileNav } from "./components/mobile-nav";
 import { QuoteForm } from "./components/quote-form";
 
 const Arrow = ({ diagonal = false }: { diagonal?: boolean }) => (
@@ -24,18 +25,18 @@ export default function Home() {
       <header className="site-header">
         <a href="#top" className="brand" aria-label="3DCRAFTS, home"><Image src="/3dcrafts-logo.svg" alt="3DCRAFTS" width={1200} height={310} priority unoptimized /></a>
         <nav aria-label="Primary navigation" className="desktop-nav"><a href="#services">Services</a><a href="#work">Selected work</a><a href="#process">Process</a></nav>
-        <a href="#quote" className="nav-cta">Request a quote <Arrow /></a>
+        <a href="#quote" className="nav-cta">Get In Touch <Arrow /></a>
+        <MobileNav />
       </header>
 
       <main id="main-content">
         <section className="hero" id="top" aria-labelledby="hero-title">
-          <div className="hero-showcase" role="img" aria-label="Examples of custom 3D printed creations">
-            <Image className="hero-slide hero-slide-one" src="/ChatGPT%20Image%20Aug%2026%2C%202026%2C%2001_30_24%20PM.png" alt="" fill sizes="(max-width: 600px) 72vw, (max-width: 900px) 56vw, 38vw" priority />
-            <Image className="hero-slide hero-slide-two" src="/ChatGPT%20Image%20Aug%2026%2C%202026%2C%2001_39_52%20PM.png" alt="" fill sizes="(max-width: 600px) 72vw, (max-width: 900px) 56vw, 38vw" loading="eager" />
-            <Image className="hero-slide hero-slide-three" src="/ChatGPT%20Image%20Aug%2026%2C%202026%2C%2001_13_49%20PM.png" alt="" fill sizes="(max-width: 600px) 72vw, (max-width: 900px) 56vw, 38vw" loading="eager" />
-          </div>
-          <div className="hero-kicker reveal"><span className="status-dot" /> Independent workshop</div>
           <h1 id="hero-title" className="reveal reveal-delay-1">Ideas,<br /><em>made physical.</em></h1>
+          <div className="hero-showcase" role="img" aria-label="Examples of custom 3D printed creations">
+            <Image className="hero-slide hero-slide-one" src="/ChatGPT%20Image%20Aug%2026%2C%202026%2C%2001_30_24%20PM.png" alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 900px) 56vw, 38vw" priority />
+            <Image className="hero-slide hero-slide-two" src="/ChatGPT%20Image%20Aug%2026%2C%202026%2C%2001_39_52%20PM.png" alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 900px) 56vw, 38vw" loading="eager" />
+            <Image className="hero-slide hero-slide-three" src="/ChatGPT%20Image%20Aug%2026%2C%202026%2C%2001_13_49%20PM.png" alt="" fill sizes="(max-width: 600px) 100vw, (max-width: 900px) 56vw, 38vw" loading="eager" />
+          </div>
           <div className="hero-bottom reveal reveal-delay-2"><p>Custom 3D printing and laser craft for people with a sketch, a problem, or a brilliant idea.</p><a href="#quote" className="text-link">Start your project <Arrow /></a></div>
           <div className="scroll-note" aria-hidden="true">Scroll to explore <span>↓</span></div>
         </section>
@@ -59,12 +60,12 @@ export default function Home() {
           <ol className="steps"><li><span>01</span><div className="step-icon"><svg aria-hidden="true" viewBox="0 0 48 48"><path d="M10 12h28v20H22l-8 6v-6h-4V12Z" /><path d="M17 21h14M17 26h9" /></svg></div><h3>Share your idea</h3><p>Send us a sketch, CAD file, reference image or simply a description. Rough is absolutely fine.</p></li><li><span>02</span><div className="step-icon"><svg aria-hidden="true" viewBox="0 0 48 48"><path d="M12 8h24v32H12zM18 17h12M18 24h12M18 31h7" /><path d="m28 31 2 2 5-6" /></svg></div><h3>Hear from us</h3><p>We&apos;ll review the details, suggest the best approach and get back to you with clear next steps.</p></li><li><span>03</span><div className="step-icon lime"><svg aria-hidden="true" viewBox="0 0 48 48"><path d="m24 7 16 9v17l-16 9-16-9V16l16-9Z" /><path d="m8 16 16 9 16-9M24 25v17M17 12l16 9" /></svg></div><h3>We make it</h3><p>Once approved, we produce, finish and check your project — ready for collection or UK delivery.</p></li></ol>
         </section>
 
-        <section className="materials section-pad" aria-labelledby="materials-title"><div className="materials-copy"><p className="eyebrow light">Materials &amp; uses</p><h2 id="materials-title">The right material<br />makes the <em>difference.</em></h2><p>Not sure what you need? That&apos;s part of the service. We&apos;ll recommend the best combination of material, process and finish for your project.</p><a href="#quote" className="text-link lime-link">Talk materials with us <Arrow /></a></div><div className="materials-lists"><div><h3>Materials</h3><ul><li>PLA &amp; recycled PLA</li><li>PETG &amp; engineering polymers</li><li>Resin</li><li>Acrylic &amp; laminates</li><li>Plywood &amp; solid timber</li><li>Card, paper &amp; leather</li></ul></div><div><h3>Made for</h3><ul><li>Product prototypes</li><li>Replacement parts</li><li>Architectural models</li><li>Retail &amp; event displays</li><li>Brand merchandise</li><li>Personalised gifts</li></ul></div></div></section>
+        <section className="materials section-pad" aria-labelledby="materials-title"><div className="materials-copy"><p className="eyebrow light">Materials &amp; uses</p><h2 id="materials-title">The right material<br />makes the <em>difference.</em></h2><p>Not sure what you need? That&apos;s part of the service. We&apos;ll recommend the best combination of material, process and finish for your project.</p><a href="#quote" className="text-link lime-link">Talk materials with us <Arrow /></a></div><div className="materials-lists"><div><h3>Materials</h3><ul><li>PLA</li><li>PETG</li><li>Acrylic</li><li>Plywood</li></ul></div><div><h3>Made for</h3><ul><li>Product prototypes</li><li>Replacement parts</li><li>Architectural models</li><li>Retail &amp; event displays</li><li>Brand merchandise</li><li>Personalised gifts</li></ul></div></div></section>
 
-        <section className="quote section-pad" id="quote" aria-labelledby="quote-title"><p className="eyebrow">Have something in mind?</p><h2 id="quote-title">Let&apos;s make<br /><em>something real.</em></h2><p className="quote-copy">Tell us what you&apos;re thinking. We&apos;ll come back with practical advice and clear next steps — usually within one working day.</p><QuoteForm /><div className="quote-details"><span>UK-wide delivery</span><span>No minimum order</span></div></section>
+        <section className="quote section-pad" id="quote" aria-labelledby="quote-title"><p className="eyebrow">Have something in mind?</p><h2 id="quote-title">Let&apos;s make<br /><em>something real.</em></h2><p className="quote-copy">Tell us what you&apos;re thinking. We&apos;ll come back with practical advice and clear next steps</p><QuoteForm /></section>
       </main>
 
-      <footer className="footer"><div className="footer-main"><a href="#top" className="footer-brand" aria-label="3DCRAFTS, back to top"><Image src="/3dcrafts-footer-logo.svg" alt="3DCRAFTS" width={1200} height={310} unoptimized /></a><div><p>Digital precision.<br />Made with care.</p></div><nav aria-label="Footer navigation"><a href="#services">Services</a><a href="#work">Work</a><a href="#process">Process</a><a href="#quote">Request a quote</a></nav><address><a href="mailto:hello@3dcrafts.uk">hello@3dcrafts.uk</a><a href="https://3dcrafts.uk">3dcrafts.uk</a></address></div><div className="footer-bottom"><span>© 2026 3DCRAFTS. All rights reserved.</span><a href="#top">Back to top ↑</a></div></footer>
+      <footer className="footer"><div className="footer-main"><a href="#top" className="footer-brand" aria-label="3DCRAFTS, back to top"><Image src="/3dcrafts-footer-logo.svg" alt="3DCRAFTS" width={1200} height={310} unoptimized /></a><div><p>Digital precision.<br />Made with care.</p></div><nav aria-label="Footer navigation"><a href="#services">Services</a><a href="#work">Work</a><a href="#process">Process</a><a href="#quote">Contact Us</a></nav><address><a href="mailto:hello@3dcrafts.uk">hello@3dcrafts.uk</a></address></div><div className="footer-bottom"><span>© 2026 3DCRAFTS. All rights reserved.</span><a href="#top">Back to top ↑</a></div></footer>
     </>
   );
 }
