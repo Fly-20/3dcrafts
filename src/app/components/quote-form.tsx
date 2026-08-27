@@ -57,8 +57,8 @@ export function QuoteForm() {
         <label>Email<input name="email" type="email" autoComplete="email" required /></label>
         <label>Service required<select name="service" defaultValue="" required><option value="" disabled>Select a service</option>{services.map((service) => <option key={service}>{service}</option>)}</select></label>
         <label className="field-wide">Project description<textarea name="description" rows={5} placeholder="What would you like made? Include materials, finish or other important details." required /></label>
-        <label className={`field-wide file-field drop-zone${isDragging ? " is-dragging" : ""}`} onDragEnter={(event) => { event.preventDefault(); setIsDragging(true); }} onDragOver={(event) => event.preventDefault()} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setIsDragging(false); }} onDrop={handleDrop}>
-          <span className="file-title">Files</span>
+        <label className={`field-wide file-field drop-zone${isDragging ? " is-dragging" : ""}${files.length ? " has-files" : ""}`} onDragEnter={(event) => { event.preventDefault(); setIsDragging(true); }} onDragOver={(event) => event.preventDefault()} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setIsDragging(false); }} onDrop={handleDrop}>
+          <span className="file-title">Attachments</span>
           <span className="file-hint">Drag and drop STL, STEP, SVG, images or sketches here, or <strong>browse your device</strong>.</span>
           <span className="file-limit">Up to 10 MB per file</span>
           <input ref={fileInputRef} className="file-input" name="files" type="file" multiple accept=".stl,.step,.stp,.svg,.png,.jpg,.jpeg,.webp,.pdf" onChange={handleFileChange} />
