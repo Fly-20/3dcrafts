@@ -2,13 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const links = [
-  { href: "#services", label: "Services" },
-  { href: "#work", label: "Selected work" },
-  { href: "#process", label: "Process" },
-];
+export type NavigationLink = {
+  href: string;
+  label: string;
+};
 
-export function MobileNav() {
+export function MobileNav({ links }: { links: NavigationLink[] }) {
   const [isOpen, setIsOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -77,7 +76,6 @@ export function MobileNav() {
               </a>
             ))}
           </nav>
-          <a className="mobile-menu-cta" href="#quote" tabIndex={isOpen ? 0 : -1} onClick={closeMenu}>Get In Touch <span>→</span></a>
         </aside>
       </div>
     </div>

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { MobileNav } from "./components/mobile-nav";
 import { QuoteForm } from "./components/quote-form";
 import { siteConfig } from "./site-config";
 
@@ -54,13 +53,6 @@ export default function Home() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema).replace(/</g, "\\u003c") }} />
       <a href="#main-content" className="skip-link">Skip to content</a>
-      <header className="site-header">
-        <a href="#top" className="brand" aria-label="3DCRAFTS, home"><Image src="/3dcrafts-logo.svg" alt="3DCRAFTS" width={1200} height={310} priority unoptimized /></a>
-        <nav aria-label="Primary navigation" className="desktop-nav"><a href="#services">Services</a><a href="#work">Selected work</a><a href="#process">Process</a></nav>
-        <a href="#quote" className="nav-cta">Get In Touch <Arrow /></a>
-        <MobileNav />
-      </header>
-
       <main id="main-content">
         <section className="hero" id="top" aria-labelledby="hero-title">
           <h1 id="hero-title" className="reveal reveal-delay-1">3D printing,<br /><em>made in Edinburgh.</em></h1>
@@ -97,7 +89,6 @@ export default function Home() {
         <section className="quote section-pad" id="quote" aria-labelledby="quote-title"><p className="eyebrow">Have something in mind?</p><h2 id="quote-title">Let&apos;s make<br /><em>something real.</em></h2><p className="quote-copy">Tell us what you&apos;re thinking. We&apos;ll come back with practical advice and clear next steps</p><QuoteForm /></section>
       </main>
 
-      <footer className="footer"><div className="footer-main"><a href="#top" className="footer-brand" aria-label="3DCRAFTS, back to top"><Image src="/3dcrafts-footer-logo.svg" alt="3DCRAFTS" width={1200} height={310} unoptimized /></a><div><p>Digital precision.<br />Made with care in Edinburgh.</p></div><nav aria-label="Footer navigation"><a href="#services">Services</a><a href="#work">Work</a><a href="#process">Process</a><a href="#quote">Contact Us</a></nav><address><span>Edinburgh, Scotland</span><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>{siteConfig.googleBusinessProfileUrl && <a href={siteConfig.googleBusinessProfileUrl} rel="me noopener noreferrer">Google Business Profile</a>}</address></div><div className="footer-bottom"><span>© 2026 3DCRAFTS. All rights reserved.</span><a href="#top">Back to top ↑</a></div></footer>
     </>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SiteChrome } from "./components/shop-nav";
 import { siteConfig } from "./site-config";
 
 export const metadata: Metadata = {
@@ -25,5 +26,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
-  return <html lang="en"><body>{children}</body></html>;
+  return <html lang="en"><body><SiteChrome>{children}</SiteChrome></body></html>;
 }
