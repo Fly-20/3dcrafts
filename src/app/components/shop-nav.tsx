@@ -72,10 +72,10 @@ export function SiteChrome({ children }: PropsWithChildren) {
   if (pathname.startsWith("/admin")) return children;
 
   return (
-    <>
+    <div className="flex min-h-svh flex-col">
       <SiteHeader overlay={pathname === "/"} />
-      {children}
+      <div className="flex-1">{children}</div>
       <SiteFooter />
-    </>
+    </div>
   );
 }
