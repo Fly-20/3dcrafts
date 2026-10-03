@@ -1,7 +1,8 @@
 export const runtime = "nodejs";
 
-const maxFileSize = 10 * 1024 * 1024;
-const allowedExtensions = new Set(["stl", "step", "stp", "svg", "png", "jpg", "jpeg", "webp", "pdf"]);
+const maxTotalFileSize = 4 * 1024 * 1024;
+const maxFiles = 10;
+const allowedExtensions = new Set(["stl", "step", "stp", "svg", "png", "jpg", "jpeg", "webp", "pdf", "doc", "docx", "txt", "rtf", "odt", "csv"]);
 
 function field(formData: FormData, name: string) {
   return String(formData.get(name) || "").trim();
@@ -24,8 +25,11 @@ export async function POST(request: Request) {
   }
 
   if (!/^\S+@\S+\.\S+$/.test(email)) return Response.json({ message: "Please enter a valid email address." }, { status: 400 });
-  if (files.some((file) => file.size > maxFileSize || !allowedExtensions.has(file.name.split(".").pop()?.toLowerCase() || ""))) {
-    return Response.json({ message: "Files must be STL, STEP, SVG, PDF or image files, up to 10 MB each." }, { status: 400 });
+  if (files.some((file) => !allowedExtensions.has(file.name.split(".").pop()?.toLowerCase() || ""))) {
+    return Response.json({ message: "Please choose STL, STEP, SVG, PDF, image or document files (DOC, DOCX, TXT, RTF, ODT, CSV)." }, { status: 400 });
+  }
+  if (files.length > maxFiles || files.reduce((total, file) => total + file.size, 0) > maxTotalFileSize) {
+    return Response.json({ message: "Choose up to 10 files, with a combined size of 4 MB or less." }, { status: 400 });
   }
 
   const apiKey = process.env.RESEND_API_KEY;
