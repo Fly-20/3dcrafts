@@ -3,6 +3,7 @@ import { createProduct } from "../actions";
 import { ProductForm, type ProductFormValues } from "../product-form";
 
 const emptyValues: ProductFormValues = {
+  personalisationRequired: false,
   title: "",
   description: "",
   fulfilmentType: "stock",

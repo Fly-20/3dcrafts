@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useCart } from "@/lib/cart-store";
+import { cartLineKey, useCart } from "@/lib/cart-store";
 import { formatPence } from "@/lib/money";
 
 type PricedCart = {
@@ -31,7 +31,7 @@ export default function CartPage() {
       headers: { "Content-Type": "application/json" },
       signal: controller.signal,
       body: JSON.stringify({
-        items: lines.map((line) => ({ variantId: line.variantId, quantity: line.quantity })),
+        items: lines.map((line) => ({ variantId: line.variantId, quantity: line.quantity, personalisationText: line.personalisationText })),
         discountCode: discountCode || undefined,
         giftCardCode: giftCardCode || undefined,
       }),
@@ -68,7 +68,7 @@ export default function CartPage() {
           <div className="flex flex-col gap-8">
             <ul className="flex flex-col gap-4">
               {lines.map((line) => (
-                <li key={line.variantId} className="flex items-center gap-4 border-b border-black/10 pb-4">
+                <li key={cartLineKey(line)} className="flex items-center gap-4 border-b border-black/10 pb-4">
                   <div className="relative h-20 w-20 shrink-0 overflow-hidden bg-black/5">
                     {line.imageUrl && <Image src={line.imageUrl} alt={line.title} fill sizes="80px" className="object-cover" />}
                   </div>
@@ -77,15 +77,16 @@ export default function CartPage() {
                       {line.title}
                     </Link>
                     <p className="text-sm text-black/60">{formatPence(line.unitPricePence)} each</p>
+                    {line.personalisationText && <p className="whitespace-pre-wrap break-words text-sm text-black/70">Personalisation: {line.personalisationText}</p>}
                   </div>
                   <input
                     type="number"
                     min={1}
                     value={line.quantity}
-                    onChange={(event) => setQuantity(line.variantId, Math.max(1, Number(event.target.value) || 1))}
+                    onChange={(event) => setQuantity(cartLineKey(line), Math.max(1, Number(event.target.value) || 1))}
                     className="w-16 border border-black/20 px-2 py-1 text-sm outline-none focus:border-black"
                   />
-                  <button type="button" onClick={() => removeLine(line.variantId)} className="text-sm text-black/50 hover:text-red-600">
+                  <button type="button" onClick={() => removeLine(cartLineKey(line))} className="text-sm text-black/50 hover:text-red-600">
                     Remove
                   </button>
                 </li>

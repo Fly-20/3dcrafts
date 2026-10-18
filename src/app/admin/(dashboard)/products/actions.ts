@@ -18,6 +18,7 @@ function slugify(title: string) {
 }
 
 type ProductCoreFields = {
+  personalisationRequired: boolean;
   title: string;
   description: string;
   fulfilmentType: string;
@@ -42,6 +43,7 @@ function readProductCoreFields(formData: FormData): ProductCoreFields | { error:
   if (!slug) return { error: "Couldn't derive a URL handle — check the title or URL handle field." };
 
   return {
+    personalisationRequired: formData.get("personalisationRequired") === "on",
     title,
     description: String(formData.get("description") || "").trim(),
     fulfilmentType,
@@ -93,6 +95,7 @@ export async function createProduct(_prevState: ProductFormState, formData: Form
   const { data: product, error: productError } = await supabase
     .from("products")
     .insert({
+      personalisation_required: fields.personalisationRequired,
       title: fields.title,
       slug: fields.slug,
       description: fields.description,
@@ -146,6 +149,7 @@ export async function updateProduct(_prevState: ProductFormState, formData: Form
   const { error: productError } = await supabase
     .from("products")
     .update({
+      personalisation_required: fields.personalisationRequired,
       title: fields.title,
       slug: fields.slug,
       description: fields.description,

@@ -121,6 +121,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session, 
     pricedCart.lineItems.map((item) => ({
       order_id: order.id,
       product_variant_id: item.variantId,
+      personalisation_text: item.personalisationText ?? null,
       quantity: item.quantity,
       unit_price_pence: item.unitPricePence,
       line_total_pence: item.lineTotalPence,

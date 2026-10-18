@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useCart } from "@/lib/cart-store";
+import { cartLineKey, useCart } from "@/lib/cart-store";
 import { formatPence } from "@/lib/money";
 
 type PricedCart = { totalPence: number };
@@ -27,7 +27,7 @@ export default function CheckoutPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        items: lines.map((line) => ({ variantId: line.variantId, quantity: line.quantity })),
+        items: lines.map((line) => ({ variantId: line.variantId, quantity: line.quantity, personalisationText: line.personalisationText })),
         discountCode: discountCode || undefined,
         giftCardCode: giftCardCode || undefined,
       }),
@@ -65,7 +65,7 @@ export default function CheckoutPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          items: lines.map((line) => ({ variantId: line.variantId, quantity: line.quantity })),
+          items: lines.map((line) => ({ variantId: line.variantId, quantity: line.quantity, personalisationText: line.personalisationText })),
           email,
           discountCode: discountCode || undefined,
           giftCardCode: giftCardCode || undefined,
@@ -85,6 +85,12 @@ export default function CheckoutPage() {
       <main className="mx-auto max-w-md px-6 py-10">
         <h1 className="mb-8 text-2xl font-semibold">Checkout</h1>
 
+        <ul className="mb-6 flex flex-col gap-3 text-sm">
+          {lines.map((line) => <li key={cartLineKey(line)}>
+            <p>{line.quantity} × {line.title}</p>
+            {line.personalisationText && <p className="whitespace-pre-wrap break-words text-black/70">Personalisation: {line.personalisationText}</p>}
+          </li>)}
+        </ul>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <label className="flex flex-col gap-1 text-sm">
             Email

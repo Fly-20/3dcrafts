@@ -42,6 +42,7 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
   const initialValues: ProductFormValues = {
     productId: product.id,
     variantId: defaultVariant?.id,
+    personalisationRequired: product.personalisation_required ?? false,
     title: product.title,
     description: product.description ?? "",
     fulfilmentType: product.fulfilment_type,

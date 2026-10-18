@@ -11,6 +11,7 @@ type ProductDetail = {
   description: string | null;
   base_price_pence: number;
   fulfilment_type: string;
+  personalisation_required: boolean;
   product_images: { url: string; alt: string | null; sort_order: number }[];
   product_options: { id: string; name: string; sort_order: number; product_option_values: { id: string; value: string; sort_order: number }[] }[];
   product_variants: { id: string; status: string; price_pence: number | null; stock_quantity: number; product_variant_option_values: { option_value_id: string }[] }[];
@@ -23,7 +24,7 @@ export default async function ProductPage({ params }: PageProps<"/shop/[slug]">)
   const { data: product } = await supabase
     .from("products")
     .select(
-      `id, title, description, base_price_pence, fulfilment_type,
+      `id, title, description, base_price_pence, fulfilment_type, personalisation_required,
        product_images(url, alt, sort_order),
        product_options(id, name, sort_order, product_option_values(id, value, sort_order)),
        product_variants(id, status, price_pence, stock_quantity, product_variant_option_values(option_value_id))`,
@@ -77,6 +78,7 @@ export default async function ProductPage({ params }: PageProps<"/shop/[slug]">)
               title={product.title}
               imageUrl={images[0]?.url ?? null}
               basePricePence={product.base_price_pence}
+              personalisationRequired={product.personalisation_required}
               fulfilmentType={product.fulfilment_type}
             />
           ) : (
@@ -85,6 +87,7 @@ export default async function ProductPage({ params }: PageProps<"/shop/[slug]">)
               {singleVariant ? (
                 <AddToCartButton
                   line={{ variantId: singleVariant.id, slug, title: product.title, imageUrl: images[0]?.url ?? null, unitPricePence: singleVariantUnitPricePence }}
+                  personalisationRequired={product.personalisation_required}
                   maxQuantity={singleVariantMaxQuantity}
                 />
               ) : (

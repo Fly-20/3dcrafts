@@ -24,6 +24,7 @@ function slugifyHandle(value: string) {
 export type ProductFormValues = {
   productId?: string;
   variantId?: string;
+  personalisationRequired: boolean;
   title: string;
   description: string;
   fulfilmentType: string;
@@ -111,6 +112,15 @@ export function ProductForm({
               .
             </span>
           </label>
+        </div>
+
+        <div className={cardClass}>
+          <h2 className={cardHeadingClass}>Personalisation</h2>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" name="personalisationRequired" defaultChecked={initialValues.personalisationRequired} />
+            Require personalisation
+          </label>
+          <p className="text-xs text-black/50">Customers must enter their names or text before adding this product to their cart. One field, up to 200 characters, included in the price. Multiple names can be entered together.</p>
         </div>
 
         {/* Pricing */}

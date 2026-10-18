@@ -8,6 +8,7 @@ import { OrderStatusForm } from "./order-status-form";
 type OrderItem = {
   id: string;
   quantity: number;
+  personalisation_text: string | null;
   unit_price_pence: number;
   line_total_pence: number;
   product_variants: { sku: string; products: { title: string } | null } | null;
@@ -21,7 +22,7 @@ export default async function AdminOrderDetailPage({ params }: PageProps<"/admin
 
   const [{ data: order }, { data: items }] = await Promise.all([
     supabase.from("orders").select("*, shipping_address:shipping_address_id(line1, line2, city, postcode, country)").eq("id", id).maybeSingle(),
-    supabase.from("order_items").select("id, quantity, unit_price_pence, line_total_pence, product_variants(sku, products(title))").eq("order_id", id).returns<OrderItem[]>(),
+    supabase.from("order_items").select("id, quantity, personalisation_text, unit_price_pence, line_total_pence, product_variants(sku, products(title))").eq("order_id", id).returns<OrderItem[]>(),
   ]);
 
   if (!order) notFound();
@@ -60,7 +61,10 @@ export default async function AdminOrderDetailPage({ params }: PageProps<"/admin
           <tbody>
             {(items ?? []).map((item) => (
               <tr key={item.id} className="border-b border-black/5">
-                <td className="py-3 pr-4">{item.product_variants?.products?.title ?? "—"}</td>
+                <td className="py-3 pr-4">
+                  {item.product_variants?.products?.title ?? "—"}
+                  {item.personalisation_text && <p className="mt-1 whitespace-pre-wrap break-words text-black/70">Personalisation: {item.personalisation_text}</p>}
+                </td>
                 <td className="py-3 pr-4 text-black/60">{item.product_variants?.sku ?? "—"}</td>
                 <td className="py-3 pr-4 text-black/60">{item.quantity}</td>
                 <td className="py-3 pr-4 text-black/60">{formatPence(item.unit_price_pence)}</td>

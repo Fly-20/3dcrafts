@@ -1,12 +1,13 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { calculateShippingPence } from "./shipping";
 
-export type CartItemInput = { variantId: string; quantity: number };
+export type CartItemInput = { variantId: string; quantity: number; personalisationText?: string };
 
 export type PricedLineItem = {
   variantId: string;
   productId: string;
   productTitle: string;
+  personalisationText?: string;
   sku: string;
   quantity: number;
   unitPricePence: number;
@@ -53,11 +54,23 @@ export async function priceCart(
 ): Promise<PricedCart> {
   if (items.length === 0) throw new CartPricingError("Your cart is empty.");
 
-  const variantIds = items.map((item) => item.variantId);
+  const quantities = new Map<string, number>();
+  for (const item of items) {
+    if (!item || typeof item.variantId !== "string" || !Number.isSafeInteger(item.quantity) || item.quantity < 1) {
+      throw new CartPricingError("Each item needs a valid variant and a whole-number quantity of at least 1.");
+    }
+    if (item.personalisationText !== undefined && (typeof item.personalisationText !== "string" || item.personalisationText.length > 200)) {
+      throw new CartPricingError("Personalisation must be text of no more than 200 characters.");
+    }
+    const total = (quantities.get(item.variantId) ?? 0) + item.quantity;
+    if (!Number.isSafeInteger(total)) throw new CartPricingError("Quantity is too large.");
+    quantities.set(item.variantId, total);
+  }
+  const variantIds = [...quantities.keys()];
   const { data: variants, error: variantsError } = await supabase
     .from("product_variants")
     .select(
-      "id, sku, price_pence, weight_grams, stock_quantity, status, product_id, products!inner(id, title, status, base_price_pence, vat_rate, fulfilment_type)",
+      "id, sku, price_pence, weight_grams, stock_quantity, status, product_id, products!inner(id, title, status, base_price_pence, vat_rate, fulfilment_type, personalisation_required)",
     )
     .in("id", variantIds);
 
@@ -73,16 +86,22 @@ export async function priceCart(
           stock_quantity: number;
           status: string;
           product_id: string;
-          products: { id: string; title: string; status: string; base_price_pence: number; vat_rate: number; fulfilment_type: string };
+          products: { id: string; title: string; status: string; base_price_pence: number; vat_rate: number; fulfilment_type: string; personalisation_required: boolean };
         }
       | undefined;
 
     if (!variant) throw new CartPricingError(`Product variant ${item.variantId} was not found.`);
-    if (item.quantity < 1) throw new CartPricingError("Quantity must be at least 1.");
+    const personalisationText = item.personalisationText?.trim() || undefined;
+    if (variant.products.personalisation_required && !personalisationText) {
+      throw new CartPricingError(`Please enter personalisation for "${variant.products.title}" on its product page.`);
+    }
+    if (!variant.products.personalisation_required && personalisationText) {
+      throw new CartPricingError(`Personalisation is no longer available for "${variant.products.title}". Please remove it and add it again from its product page.`);
+    }
     if (variant.status !== "active" || variant.products.status !== "active") {
       throw new CartPricingError(`${variant.products.title} is no longer available.`);
     }
-    if (variant.products.fulfilment_type === "stock" && item.quantity > variant.stock_quantity) {
+    if (variant.products.fulfilment_type === "stock" && quantities.get(item.variantId)! > variant.stock_quantity) {
       throw new CartPricingError(`Only ${variant.stock_quantity} of "${variant.products.title}" left in stock.`);
     }
 
@@ -91,6 +110,7 @@ export async function priceCart(
       variantId: variant.id,
       productId: variant.product_id,
       productTitle: variant.products.title,
+      personalisationText,
       sku: variant.sku,
       quantity: item.quantity,
       unitPricePence,

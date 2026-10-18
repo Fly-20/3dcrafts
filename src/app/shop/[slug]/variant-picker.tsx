@@ -22,6 +22,7 @@ export function VariantPicker({
   title,
   imageUrl,
   basePricePence,
+  personalisationRequired,
   fulfilmentType,
 }: {
   options: Option[];
@@ -30,6 +31,7 @@ export function VariantPicker({
   title: string;
   imageUrl: string | null;
   basePricePence: number;
+  personalisationRequired: boolean;
   fulfilmentType: string;
 }) {
   const [selected, setSelected] = useState<Record<string, string>>(() => Object.fromEntries(options.map((option) => [option.id, option.values[0]?.id ?? ""])));
@@ -70,6 +72,7 @@ export function VariantPicker({
       {variant ? (
         <AddToCartButton
           line={{ variantId: variant.id, slug, title: variantLabel ? `${title} — ${variantLabel}` : title, imageUrl, unitPricePence }}
+          personalisationRequired={personalisationRequired}
           maxQuantity={maxQuantity}
         />
       ) : (

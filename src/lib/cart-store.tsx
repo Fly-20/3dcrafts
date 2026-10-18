@@ -4,12 +4,17 @@ import { useCallback, useSyncExternalStore } from "react";
 
 export type CartLine = {
   variantId: string;
+  personalisationText?: string;
   slug: string;
   title: string;
   imageUrl: string | null;
   unitPricePence: number;
   quantity: number;
 };
+
+export function cartLineKey(line: Pick<CartLine, "variantId" | "personalisationText">) {
+  return JSON.stringify([line.variantId, line.personalisationText ?? ""]);
+}
 
 type CartState = {
   lines: CartLine[];
@@ -73,23 +78,23 @@ export function useCart() {
 
   const addLine = useCallback((line: Omit<CartLine, "quantity">, quantity: number) => {
     setState((prev) => {
-      const existing = prev.lines.find((item) => item.variantId === line.variantId);
+      const existing = prev.lines.find((item) => cartLineKey(item) === cartLineKey(line));
       const lines = existing
-        ? prev.lines.map((item) => (item.variantId === line.variantId ? { ...item, quantity: item.quantity + quantity } : item))
+        ? prev.lines.map((item) => (cartLineKey(item) === cartLineKey(line) ? { ...item, quantity: item.quantity + quantity } : item))
         : [...prev.lines, { ...line, quantity }];
       return { ...prev, lines };
     });
   }, []);
 
-  const setQuantity = useCallback((variantId: string, quantity: number) => {
+  const setQuantity = useCallback((lineKey: string, quantity: number) => {
     setState((prev) => ({
       ...prev,
-      lines: quantity <= 0 ? prev.lines.filter((item) => item.variantId !== variantId) : prev.lines.map((item) => (item.variantId === variantId ? { ...item, quantity } : item)),
+      lines: quantity <= 0 ? prev.lines.filter((item) => cartLineKey(item) !== lineKey) : prev.lines.map((item) => (cartLineKey(item) === lineKey ? { ...item, quantity } : item)),
     }));
   }, []);
 
-  const removeLine = useCallback((variantId: string) => {
-    setState((prev) => ({ ...prev, lines: prev.lines.filter((item) => item.variantId !== variantId) }));
+  const removeLine = useCallback((lineKey: string) => {
+    setState((prev) => ({ ...prev, lines: prev.lines.filter((item) => cartLineKey(item) !== lineKey) }));
   }, []);
 
   const clear = useCallback(() => {

@@ -33,7 +33,7 @@ export function ProductImagesManager({ productId, productTitle, initialImages }:
 
   async function uploadFiles(fileList: FileList | File[]) {
     const files = Array.from(fileList);
-    if (files.length === 0) return;
+    if (files.length === 0 || isUploading) return;
     setUploadError(null);
     setIsUploading(true);
     try {
@@ -66,7 +66,7 @@ export function ProductImagesManager({ productId, productTitle, initialImages }:
   function handleZoneDrop(event: DragEvent<HTMLDivElement>) {
     event.preventDefault();
     setIsDragOver(false);
-    if (event.dataTransfer.files.length > 0) uploadFiles(event.dataTransfer.files);
+    if (!isUploading && event.dataTransfer.files.length > 0) uploadFiles(event.dataTransfer.files);
   }
 
   function handleThumbDrop(targetId: string) {
@@ -164,7 +164,7 @@ export function ProductImagesManager({ productId, productTitle, initialImages }:
           if (!event.currentTarget.contains(event.relatedTarget as Node)) setIsDragOver(false);
         }}
         onDrop={handleZoneDrop}
-        onClick={() => { if (!isUploading) fileInputRef.current?.click(); }}
+        onClick={(event) => { if (!isUploading && event.target !== fileInputRef.current) fileInputRef.current?.click(); }}
         className={`flex min-h-[110px] flex-col items-center justify-center gap-1 border border-dashed px-6 py-6 text-center transition-colors ${isUploading ? "cursor-wait opacity-60" : "cursor-pointer"} ${
           isDragOver ? "border-black bg-black/[.04]" : "border-black/25 hover:border-black/40"
         }`}

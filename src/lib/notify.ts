@@ -48,7 +48,7 @@ export async function sendDiscordNotification(options: { title: string; descript
 }
 
 function orderLinesText(lineItems: PricedLineItem[]) {
-  return lineItems.map((item) => `${item.quantity} x ${item.productTitle} (${item.sku}) — ${formatPence(item.lineTotalPence)}`).join("\n");
+  return lineItems.map((item) => `${item.quantity} x ${item.productTitle} (${item.sku}) — ${formatPence(item.lineTotalPence)}${item.personalisationText ? `\n  Personalisation: ${item.personalisationText}` : ""}`).join("\n");
 }
 
 /** All products default to 20% VAT (Section 8), but vat_rate is per-product — show the rate only when every line shares one, otherwise just the amount. */

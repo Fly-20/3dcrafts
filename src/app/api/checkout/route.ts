@@ -71,7 +71,7 @@ export async function POST(request: Request) {
         price_data: {
           currency: "gbp",
           unit_amount: item.unitPricePence,
-          product_data: { name: item.productTitle, metadata: { sku: item.sku, variant_id: item.variantId } },
+          product_data: { name: item.productTitle, description: item.personalisationText ? `Personalisation: ${item.personalisationText}` : undefined, metadata: { sku: item.sku, variant_id: item.variantId } },
         },
       })),
       shipping_address_collection: { allowed_countries: ["GB"] },
