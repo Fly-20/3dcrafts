@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { createPublicServerClient } from "@/lib/supabase/public";
 import { formatPence } from "@/lib/money";
 import { AddToCartButton } from "./add-to-cart-button";
@@ -52,17 +53,24 @@ export default async function ProductPage({ params }: PageProps<"/shop/[slug]">)
 
   return (
     <>
-      <main className="grid w-full grid-cols-1 gap-10 px-[6.5vw] py-10 sm:grid-cols-2">
-        <div className="relative aspect-square w-full overflow-hidden bg-black/5">
+      <main className="product-page">
+        <nav aria-label="Breadcrumb" className="product-breadcrumb">
+          <Link href="/shop">Shop</Link><span aria-hidden="true">/</span><span>{product.title}</span>
+        </nav>
+        <div className="product-layout">
+        <div className="product-image">
           {images[0] ? (
-            <Image src={images[0].url} alt={images[0].alt ?? product.title} fill sizes="(max-width: 640px) 100vw, 50vw" className="object-cover" priority />
+            <Image src={images[0].url} alt={images[0].alt ?? product.title} fill sizes="(max-width: 900px) 100vw, 55vw" className="object-cover" preload />
           ) : (
             <div className="flex h-full items-center justify-center text-xs text-black/40">No image</div>
           )}
         </div>
 
-        <div className="flex flex-col gap-4">
-          <h1 className="text-2xl font-semibold">{product.title}</h1>
+        <section className="product-purchase" aria-labelledby="product-title">
+          <div className="product-heading">
+            <p className="product-kicker">{product.fulfilment_type === "stock" ? "From our collection" : "Made to order"}</p>
+            <h1 id="product-title">{product.title}</h1>
+          </div>
 
           {hasOptions ? (
             <VariantPicker
@@ -83,7 +91,7 @@ export default async function ProductPage({ params }: PageProps<"/shop/[slug]">)
             />
           ) : (
             <>
-              <p className="text-lg">{formatPence(singleVariantUnitPricePence)}</p>
+              <p className="product-price">{formatPence(singleVariantUnitPricePence)}</p>
               {singleVariant ? (
                 <AddToCartButton
                   line={{ variantId: singleVariant.id, slug, title: product.title, imageUrl: images[0]?.url ?? null, unitPricePence: singleVariantUnitPricePence }}
@@ -96,8 +104,15 @@ export default async function ProductPage({ params }: PageProps<"/shop/[slug]">)
             </>
           )}
 
-          {product.description && <div className="rich-text text-sm text-black/70" dangerouslySetInnerHTML={{ __html: product.description }} />}
+          <p className="product-purchase-note">{product.personalisation_required ? "Personalisation included in the price." : "Crafted with attention to detail."}</p>
+        </section>
         </div>
+        {product.description && (
+          <section className="product-details" aria-labelledby="product-details-title">
+            <div><p className="product-kicker">The details</p><h2 id="product-details-title">A closer look</h2></div>
+            <div className="rich-text product-description" dangerouslySetInnerHTML={{ __html: product.description }} />
+          </section>
+        )}
       </main>
     </>
   );

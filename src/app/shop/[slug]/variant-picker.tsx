@@ -49,7 +49,7 @@ export function VariantPicker({
     .join(", ");
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="product-variants">
       {options.map((option) => (
         <label key={option.id} className="flex flex-col gap-1 text-sm">
           {option.name}
@@ -67,7 +67,7 @@ export function VariantPicker({
         </label>
       ))}
 
-      <p className="text-lg">{formatPence(unitPricePence)}</p>
+      <p className="product-price">{formatPence(unitPricePence)}</p>
 
       {variant ? (
         <AddToCartButton
