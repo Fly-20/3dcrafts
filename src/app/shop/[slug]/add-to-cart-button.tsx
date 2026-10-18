@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useRef, useState } from "react";
 import Link from "next/link";
 import { useCart, type CartLine } from "@/lib/cart-store";
 
@@ -9,6 +9,15 @@ export function AddToCartButton({ line, maxQuantity, personalisationRequired = f
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [personalisationText, setPersonalisationText] = useState("");
+  const [personalisationError, setPersonalisationError] = useState(false);
+  const personalisationRef = useRef<HTMLTextAreaElement>(null);
+  const personalisationErrorId = useId();
+
+  function showPersonalisationError() {
+    setPersonalisationError(true);
+    setAdded(false);
+    personalisationRef.current?.focus();
+  }
 
   if (maxQuantity === 0) {
     return <p className="text-sm text-black/60">Sold out.</p>;
@@ -17,7 +26,11 @@ export function AddToCartButton({ line, maxQuantity, personalisationRequired = f
   return (
     <form className="flex flex-col gap-3" onSubmit={(event) => {
       event.preventDefault();
-      if (personalisationRequired && !personalisationText.trim()) return;
+      if (personalisationRequired && !personalisationText.trim()) {
+        showPersonalisationError();
+        return;
+      }
+      setPersonalisationError(false);
       addLine({ ...line, personalisationText: personalisationRequired ? personalisationText.trim() : undefined }, quantity);
       setAdded(true);
     }}>
@@ -25,9 +38,16 @@ export function AddToCartButton({ line, maxQuantity, personalisationRequired = f
         <label className="flex flex-col gap-1 text-sm">
           Personalisation (required)
           <textarea required maxLength={200} rows={3} value={personalisationText}
-            onChange={(event) => { setPersonalisationText(event.target.value); setAdded(false); }}
+            ref={personalisationRef}
+            aria-invalid={personalisationError || undefined}
+            aria-describedby={personalisationError ? personalisationErrorId : undefined}
+            onInvalid={(event) => { event.preventDefault(); showPersonalisationError(); }}
+            onChange={(event) => { setPersonalisationText(event.target.value); if (event.target.value.trim()) setPersonalisationError(false); setAdded(false); }}
             placeholder="e.g. Emma, Oliver, Sophia"
-            className="border border-black/20 px-3 py-2 outline-none focus:border-black" />
+            className={`border px-3 py-2 outline-none ${personalisationError ? "border-red-600 focus:border-red-600" : "border-black/20 focus:border-black"}`} />
+          {personalisationError && (
+            <span id={personalisationErrorId} role="alert" className="text-sm text-red-700">Please enter the names or text you&apos;d like on your item.</span>
+          )}
           <span className="text-xs text-black/50">Enter all names or text in this field, separated by commas or new lines. For multiple items, make clear which name goes on each. Included in the price.</span>
           <span className="text-xs text-black/50">{personalisationText.length}/200 characters</span>
         </label>
@@ -64,7 +84,6 @@ export function AddToCartButton({ line, maxQuantity, personalisationRequired = f
         </div>
         <button
           type="submit"
-          disabled={personalisationRequired && !personalisationText.trim()}
           className="bg-black px-6 py-2 text-sm font-medium text-white"
         >
           Add to cart
