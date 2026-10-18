@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { login, type LoginState } from "./actions";
 
 const initialState: LoginState = {};
@@ -31,6 +32,9 @@ export default function AdminLoginPage() {
         <button type="submit" disabled={pending} className="bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-60">
           {pending ? "Signing in…" : "Sign in"}
         </button>
+        <Link href="/admin/reset-password" className="text-sm underline">
+          Forgot your password?
+        </Link>
       </form>
     </main>
   );
