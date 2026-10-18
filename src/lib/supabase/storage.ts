@@ -1,5 +1,4 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { randomUUID } from "crypto";
 
 /**
  * Product image upload/URL helpers (Section 4a of the technical plan).
@@ -23,7 +22,7 @@ export class ProductImageError extends Error {
   }
 }
 
-function validateAndGetExtension(file: File) {
+function validateAndGetExtension(file: Pick<File, "type" | "size">) {
   const extension = allowedContentTypes[file.type];
   if (!extension) throw new ProductImageError("Images must be JPG, PNG or WebP.");
   if (file.size > maxFileSizeBytes) throw new ProductImageError("Images must be 5 MB or smaller.");
@@ -31,8 +30,8 @@ function validateAndGetExtension(file: File) {
 }
 
 /** Generated id in the storage path, not the original filename — avoids collisions and allows safe long-lived caching. */
-export function buildProductImagePath(productId: string, file: File) {
-  return `${productId}/${randomUUID()}.${validateAndGetExtension(file)}`;
+export function buildProductImagePath(productId: string, file: Pick<File, "type" | "size">) {
+  return `${productId}/${crypto.randomUUID()}.${validateAndGetExtension(file)}`;
 }
 
 export function getProductImagePublicUrl(supabase: SupabaseClient, path: string) {
@@ -64,7 +63,7 @@ export async function deleteProductImage(supabase: SupabaseClient, path: string)
  * Storage, guarded by the "Admins can upload product images" RLS policy on
  * storage.objects instead of a server route handler.
  */
-export async function createSignedProductImageUploadUrl(supabase: SupabaseClient, productId: string, file: File) {
+export async function createSignedProductImageUploadUrl(supabase: SupabaseClient, productId: string, file: Pick<File, "type" | "size">) {
   const path = buildProductImagePath(productId, file);
   const { data, error } = await supabase.storage.from(PRODUCT_IMAGES_BUCKET).createSignedUploadUrl(path);
   if (error) throw error;

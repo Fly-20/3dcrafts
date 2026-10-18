@@ -1,7 +1,6 @@
 import { createServerAuthClient } from "@/lib/supabase/auth-server";
 import { createProduct } from "../actions";
 import { ProductForm, type ProductFormValues } from "../product-form";
-import { ProductImagesField } from "../product-images-field";
 
 const emptyValues: ProductFormValues = {
   title: "",
@@ -27,7 +26,13 @@ export default async function NewProductPage() {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-semibold">New product</h1>
-      <ProductForm action={createProduct} initialValues={emptyValues} submitLabel="Create product" imagesField={<ProductImagesField />} categories={categories ?? []} />
+      <ProductForm
+        action={createProduct}
+        initialValues={emptyValues}
+        submitLabel="Create product"
+        imagesField={<p className="text-sm text-black/60">Create the product first, then upload images on its edit page. Keep it as a draft until it is ready.</p>}
+        categories={categories ?? []}
+      />
     </div>
   );
 }

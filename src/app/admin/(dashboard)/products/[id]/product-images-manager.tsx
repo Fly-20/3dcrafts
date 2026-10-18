@@ -2,7 +2,9 @@
 
 import { useRef, useState, useTransition, type DragEvent } from "react";
 import Image from "next/image";
-import { deleteProductImageAction, reorderProductImagesAction, uploadProductImagesAction } from "../actions";
+import { completeProductImageUpload, deleteProductImageAction, prepareProductImageUpload, reorderProductImagesAction } from "../actions";
+import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import { PRODUCT_IMAGES_BUCKET } from "@/lib/supabase/storage";
 
 type ProductImage = { id: string; url: string; alt: string | null };
 
@@ -15,6 +17,7 @@ export function ProductImagesManager({ productId, productTitle, initialImages }:
   const [images, setImages] = useState(initialImages);
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [isPending, startTransition] = useTransition();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const draggedIdRef = useRef<string | null>(null);
@@ -32,14 +35,32 @@ export function ProductImagesManager({ productId, productTitle, initialImages }:
     const files = Array.from(fileList);
     if (files.length === 0) return;
     setUploadError(null);
-
-    const formData = new FormData();
-    formData.set("productId", productId);
-    files.forEach((file) => formData.append("files", file));
-
-    const result = await uploadProductImagesAction(formData);
-    if (result.error) setUploadError(result.error);
-    if (result.images?.length) setImages((prev) => [...prev, ...result.images!]);
+    setIsUploading(true);
+    try {
+      const storage = createBrowserSupabaseClient().storage.from(PRODUCT_IMAGES_BUCKET);
+      for (const file of files) {
+        const prepared = await prepareProductImageUpload(productId, { type: file.type, size: file.size });
+        if (prepared.error || !prepared.path || !prepared.token) {
+          setUploadError(prepared.error || "Couldn't prepare the image upload.");
+          break;
+        }
+        const { error } = await storage.uploadToSignedUrl(prepared.path, prepared.token, file, { contentType: file.type });
+        if (error) {
+          setUploadError(`Couldn't upload ${file.name}. Please try again.`);
+          break;
+        }
+        const result = await completeProductImageUpload(productId, prepared.path);
+        if (result.error || !result.image) {
+          setUploadError(result.error || "Couldn't attach the image to the product.");
+          break;
+        }
+        setImages((previous) => [...previous, result.image!]);
+      }
+    } catch {
+      setUploadError("Image upload failed. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
   }
 
   function handleZoneDrop(event: DragEvent<HTMLDivElement>) {
@@ -143,8 +164,8 @@ export function ProductImagesManager({ productId, productTitle, initialImages }:
           if (!event.currentTarget.contains(event.relatedTarget as Node)) setIsDragOver(false);
         }}
         onDrop={handleZoneDrop}
-        onClick={() => fileInputRef.current?.click()}
-        className={`flex min-h-[110px] cursor-pointer flex-col items-center justify-center gap-1 border border-dashed px-6 py-6 text-center transition-colors ${
+        onClick={() => { if (!isUploading) fileInputRef.current?.click(); }}
+        className={`flex min-h-[110px] flex-col items-center justify-center gap-1 border border-dashed px-6 py-6 text-center transition-colors ${isUploading ? "cursor-wait opacity-60" : "cursor-pointer"} ${
           isDragOver ? "border-black bg-black/[.04]" : "border-black/25 hover:border-black/40"
         }`}
       >
@@ -168,6 +189,7 @@ export function ProductImagesManager({ productId, productTitle, initialImages }:
           {uploadError}
         </p>
       )}
+      {isUploading && <p className="text-xs text-black/60" role="status">Uploading images…</p>}
       {isPending && <p className="text-xs text-black/40">Saving order…</p>}
     </div>
   );

@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin-auth";
 import { createServerAuthClient } from "@/lib/supabase/auth-server";
 import { poundsToPence } from "@/lib/money";
-import { uploadProductImage, deleteProductImage, ProductImageError } from "@/lib/supabase/storage";
+import { createSignedProductImageUploadUrl, deleteProductImage, getProductImagePublicUrl, PRODUCT_IMAGES_BUCKET, ProductImageError } from "@/lib/supabase/storage";
 
 export type ProductFormState = { error?: string; success?: boolean };
 
@@ -119,17 +119,6 @@ export async function createProduct(_prevState: ProductFormState, formData: Form
   });
   if (variantError) return { error: `Product created, but the default variant failed: ${variantError.message}` };
 
-  const imageFiles = formData.getAll("images").filter((entry): entry is File => entry instanceof File && entry.size > 0);
-  for (let i = 0; i < imageFiles.length; i++) {
-    try {
-      const { url } = await uploadProductImage(supabase, product.id, imageFiles[i]);
-      await supabase.from("product_images").insert({ product_id: product.id, url, alt: "", sort_order: i });
-    } catch (error) {
-      // Product itself is created either way — a failed image can be retried from the edit page's upload form.
-      console.error("Failed to upload product image during creation:", error);
-    }
-  }
-
   revalidatePath("/admin/products");
   redirect(`/admin/products/${product.id}`);
 }
@@ -191,40 +180,48 @@ export async function updateProduct(_prevState: ProductFormState, formData: Form
   return { success: true };
 }
 
-export type MultiImageUploadState = { error?: string; images?: { id: string; url: string; alt: string | null }[] };
-
-/** Uploads one or more images (drag-drop or multi-select on the edit page), appending them after whatever's already there. Called directly from ProductImagesManager, not bound to a <form>. */
-export async function uploadProductImagesAction(formData: FormData): Promise<MultiImageUploadState> {
+export async function prepareProductImageUpload(productId: string, file: { type: string; size: number }): Promise<{ path?: string; token?: string; error?: string }> {
   await requireAdmin();
-  const productId = String(formData.get("productId") || "");
-  const files = formData.getAll("files").filter((entry): entry is File => entry instanceof File && entry.size > 0);
-  if (!productId || files.length === 0) return { error: "Choose at least one image to upload." };
-
   const supabase = await createServerAuthClient();
-  const { count } = await supabase.from("product_images").select("id", { count: "exact", head: true }).eq("product_id", productId);
+  const { data: product, error } = await supabase.from("products").select("id").eq("id", productId).maybeSingle();
+  if (error || !product) return { error: "Product not found." };
 
-  let nextSortOrder = count ?? 0;
-  const uploaded: { id: string; url: string; alt: string | null }[] = [];
-  let lastError: string | null = null;
+  try {
+    const { path, token } = await createSignedProductImageUploadUrl(supabase, productId, file);
+    return { path, token };
+  } catch (error) {
+    return { error: error instanceof ProductImageError ? error.message : "Couldn't prepare the image upload." };
+  }
+}
 
-  for (const file of files) {
-    try {
-      const { url } = await uploadProductImage(supabase, productId, file);
-      const { data, error } = await supabase.from("product_images").insert({ product_id: productId, url, alt: "", sort_order: nextSortOrder }).select("id, url, alt").single();
-      if (error || !data) {
-        lastError = error?.message ?? "Insert failed.";
-        continue;
-      }
-      uploaded.push(data);
-      nextSortOrder++;
-    } catch (error) {
-      lastError = error instanceof ProductImageError ? error.message : "Upload failed.";
-    }
+export async function completeProductImageUpload(productId: string, path: string): Promise<{ image?: { id: string; url: string; alt: string | null }; error?: string }> {
+  await requireAdmin();
+  if (!path.startsWith(`${productId}/`) || !/^[0-9a-f-]{36}\.(jpg|png|webp)$/.test(path.slice(productId.length + 1))) {
+    return { error: "Invalid image path." };
   }
 
+  const supabase = await createServerAuthClient();
+  const { data: product } = await supabase.from("products").select("id").eq("id", productId).maybeSingle();
+  if (!product) return { error: "Product not found." };
+
+  const { error: storageError } = await supabase.storage.from(PRODUCT_IMAGES_BUCKET).info(path);
+  if (storageError) return { error: "Image upload did not complete. Please try again." };
+
+  const url = getProductImagePublicUrl(supabase, path);
+  const { data: existing } = await supabase.from("product_images").select("id, url, alt").eq("product_id", productId).eq("url", url).maybeSingle();
+  if (existing) return { image: existing };
+
+  const { data: lastImage, error: orderError } = await supabase.from("product_images").select("sort_order").eq("product_id", productId).order("sort_order", { ascending: false }).limit(1).maybeSingle();
+  if (orderError) return { error: "Couldn't save image order." };
+  const { data: image, error } = await supabase.from("product_images").insert({
+    product_id: productId,
+    url,
+    alt: "",
+    sort_order: (lastImage?.sort_order ?? -1) + 1,
+  }).select("id, url, alt").single();
+  if (error || !image) return { error: "Image uploaded, but couldn't be attached to the product. Please try again." };
   revalidatePath(`/admin/products/${productId}`);
-  if (uploaded.length === 0) return { error: lastError || "Upload failed." };
-  return { images: uploaded };
+  return { image };
 }
 
 /** Persists a full drag-and-drop reorder in one go — sets sort_order to each id's position in the given order. Called directly from ProductImagesManager. */
