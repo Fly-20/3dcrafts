@@ -7,7 +7,7 @@ import ts from 'typescript';
 function load(source, dependencies, globals = {}) {
   const exports = {};
   const code = ts.transpileModule(fs.readFileSync(source, 'utf8'), {
-    compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX },
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2017, jsx: ts.JsxEmit.ReactJSX },
   }).outputText;
   vm.runInNewContext(code, { exports, require: (name) => dependencies[name], ...globals });
   return exports;
@@ -83,4 +83,22 @@ test('cart keeps different names separate and updates/removes only the chosen en
   assert.equal(cart.useCart().lines[0].personalisationText, 'Oliver');
   assert.equal(JSON.parse(storage.get('3dcrafts_cart'))[0].personalisationText, 'Oliver');
   assert.equal(cart.cartLineKey({ variantId: 'old' }), cart.cartLineKey({ variantId: 'old', personalisationText: '' }));
+});
+
+
+test('service client accepts the public database URL when the duplicate server URL is absent', () => {
+  let actual;
+  const { createServiceRoleClient } = load('src/lib/supabase/server.ts', {
+    '@supabase/supabase-js': { createClient: (...args) => { actual = args; return {}; } },
+  }, { process: { env: { NEXT_PUBLIC_SUPABASE_URL: 'https://example.supabase.co', SUPABASE_SERVICE_ROLE_KEY: 'test-key' } } });
+  createServiceRoleClient();
+  assert.equal(actual[0], 'https://example.supabase.co');
+  assert.equal(actual[1], 'test-key');
+});
+
+test('service client requires a server credential and never falls back to the anonymous key', () => {
+  const { createServiceRoleClient } = load('src/lib/supabase/server.ts', {}, {
+    process: { env: { NEXT_PUBLIC_SUPABASE_URL: 'https://example.supabase.co', NEXT_PUBLIC_SUPABASE_ANON_KEY: 'anonymous' } },
+  });
+  assert.throws(createServiceRoleClient, /SUPABASE_SERVICE_ROLE_KEY/);
 });

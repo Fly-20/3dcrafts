@@ -33,17 +33,35 @@ export function AddToCartButton({ line, maxQuantity, personalisationRequired = f
         </label>
       )}
       <div className="flex items-center gap-3">
-        <label className="flex items-center gap-2 text-sm">
-          Qty
+        <div role="group" aria-label="Quantity" className="flex items-center">
+          <button
+            type="button"
+            aria-label="Decrease quantity"
+            disabled={quantity <= 1}
+            onClick={() => { setQuantity(Math.max(1, quantity - 1)); setAdded(false); }}
+            className="flex h-10 w-10 items-center justify-center text-xl disabled:cursor-not-allowed disabled:opacity-30"
+          >
+            −
+          </button>
           <input
             type="number"
+            aria-label="Quantity"
             min={1}
             max={maxQuantity ?? undefined}
             value={quantity}
-            onChange={(event) => setQuantity(Math.max(1, Number(event.target.value) || 1))}
-            className="w-16 border border-black/20 px-2 py-1 text-sm outline-none focus:border-black"
+            onChange={(event) => { setQuantity(Math.min(maxQuantity ?? Infinity, Math.max(1, Math.floor(Number(event.target.value)) || 1))); setAdded(false); }}
+            className="h-10 w-14 appearance-none border border-black/20 px-2 text-center text-sm outline-none focus:border-black [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           />
-        </label>
+          <button
+            type="button"
+            aria-label="Increase quantity"
+            disabled={maxQuantity !== null && quantity >= maxQuantity}
+            onClick={() => { setQuantity(Math.min(maxQuantity ?? Infinity, quantity + 1)); setAdded(false); }}
+            className="flex h-10 w-10 items-center justify-center text-xl disabled:cursor-not-allowed disabled:opacity-30"
+          >
+            +
+          </button>
+        </div>
         <button
           type="submit"
           disabled={personalisationRequired && !personalisationText.trim()}
