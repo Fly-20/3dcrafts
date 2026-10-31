@@ -4,6 +4,7 @@ import { createServiceRoleClient } from "@/lib/supabase/server";
 import type { PricedCart } from "@/lib/cart";
 import { sendOrderConfirmationEmail, sendStaffNewOrderNotification, sendPaymentFailedEmail, sendStaffFailedPaymentAlert } from "@/lib/notify";
 import { getBusinessSettings } from "@/lib/business-settings";
+import { addCustomerTag } from "@/lib/customer-identity";
 
 export const runtime = "nodejs";
 
@@ -71,6 +72,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session, 
     .upsert({ email, name: session.customer_details?.name ?? null }, { onConflict: "email" })
     .select("id")
     .single();
+  if (customer?.id) await addCustomerTag(supabase, customer.id, "Website customer");
 
   const shippingDetails = session.collected_information?.shipping_details;
   let shippingAddressId: string | null = null;

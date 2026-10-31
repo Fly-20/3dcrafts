@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { cartLineKey, useCart } from "@/lib/cart-store";
+import { cartLineKey, findInvalidCartLine, useCart } from "@/lib/cart-store";
 import { formatPence } from "@/lib/money";
 
 type PricedCart = {
@@ -50,6 +50,8 @@ export default function CartPage() {
 
     return () => controller.abort();
   }, [lines, discountCode, giftCardCode]);
+
+  const invalidLine = findInvalidCartLine(lines, pricingError);
 
   return (
     <>
@@ -110,7 +112,21 @@ export default function CartPage() {
               />
             </div>
 
-            {pricingError && <p className="text-sm text-red-600">{pricingError}</p>}
+            {pricingError && (
+              <p className="text-sm text-red-600">
+                {invalidLine ? (
+                  <>
+                    &ldquo;{invalidLine.title}&rdquo; is no longer available.{" "}
+                    <button type="button" onClick={() => removeLine(cartLineKey(invalidLine))} className="font-medium underline">
+                      Remove it
+                    </button>{" "}
+                    to continue.
+                  </>
+                ) : (
+                  pricingError
+                )}
+              </p>
+            )}
 
             {pricedCart && (
               <div className="flex flex-col gap-2 border-t border-black/10 pt-4 text-sm">

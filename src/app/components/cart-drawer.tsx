@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { cartLineKey, useCart } from "@/lib/cart-store";
+import { cartLineKey, findInvalidCartLine, useCart } from "@/lib/cart-store";
 import { formatPence } from "@/lib/money";
 
 type PricedCart = { subtotalPence: number; shippingPence: number; totalPence: number };
@@ -59,6 +59,8 @@ export function CartDrawer() {
 
     return () => controller.abort();
   }, [isDrawerOpen, lines]);
+
+  const invalidLine = findInvalidCartLine(lines, pricingError);
 
   return (
     <div className={`cart-drawer-shell${isDrawerOpen ? " is-open" : ""}`}>
@@ -119,7 +121,18 @@ export function CartDrawer() {
             </ul>
 
             <div className="cart-drawer-footer">
-              {pricingError && <p className="cart-drawer-error">{pricingError}</p>}
+              {pricingError && (
+                <p className="cart-drawer-error">
+                  {invalidLine ? (
+                    <>
+                      &ldquo;{invalidLine.title}&rdquo; is no longer available.{" "}
+                      <button type="button" onClick={() => removeLine(cartLineKey(invalidLine))}>Remove it</button> to continue.
+                    </>
+                  ) : (
+                    pricingError
+                  )}
+                </p>
+              )}
               {pricedCart && (
                 <div className="cart-drawer-subtotal">
                   <span>Subtotal</span>

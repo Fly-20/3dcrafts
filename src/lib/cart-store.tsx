@@ -16,6 +16,14 @@ export function cartLineKey(line: Pick<CartLine, "variantId" | "personalisationT
   return JSON.stringify([line.variantId, line.personalisationText ?? ""]);
 }
 
+const MISSING_VARIANT_ERROR = /^Product variant ([0-9a-f-]{36}) was not found\.$/;
+
+/** Maps /api/cart's "Product variant <id> was not found." error back to the stale cart line, so the UI can offer to remove it instead of dead-ending on a generic error. */
+export function findInvalidCartLine(lines: CartLine[], pricingError: string | null) {
+  const match = pricingError?.match(MISSING_VARIANT_ERROR);
+  return match ? (lines.find((line) => line.variantId === match[1]) ?? null) : null;
+}
+
 type CartState = {
   lines: CartLine[];
   discountCode: string;

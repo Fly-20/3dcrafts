@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/admin/products", label: "Products" },
   { href: "/admin/categories", label: "Categories" },
   { href: "/admin/customers", label: "Customers" },
+  { href: "/admin/timelapses", label: "Timelapses" },
   { href: "/admin/discounts", label: "Discounts" },
   { href: "/admin/gift-cards", label: "Gift cards" },
   { href: "/admin/shipping-rates", label: "Shipping" },
