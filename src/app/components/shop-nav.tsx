@@ -27,11 +27,11 @@ function BrandMark({ light = false }: { light?: boolean }) {
 }
 
 export function SiteHeader() {
-  const { itemCount } = useCart();
+  const { itemCount, openDrawer } = useCart();
   const links: NavigationLink[] = [
     ...primaryLinks,
     { href: "/track-order", label: "Track order" },
-    { href: "/cart", label: `Cart${itemCount > 0 ? ` (${itemCount})` : ""}` },
+    { href: "/cart", label: `Cart${itemCount > 0 ? ` (${itemCount})` : ""}`, onClick: openDrawer },
   ];
   const whatsappLink: NavigationLink | null = siteConfig.whatsappNumber ? { href: `https://wa.me/${siteConfig.whatsappNumber}`, label: "Message us on WhatsApp", cta: true } : null;
 
@@ -43,7 +43,13 @@ export function SiteHeader() {
           <span className="brand-name">3DCRAFTS</span>
         </Link>
         <nav aria-label="Primary navigation" className="desktop-nav">
-          {links.map((link) => <Link key={link.href} href={link.href}>{link.label}</Link>)}
+          {links.map((link) => (
+            link.onClick ? (
+              <button key={link.href} type="button" onClick={link.onClick}>{link.label}</button>
+            ) : (
+              <Link key={link.href} href={link.href}>{link.label}</Link>
+            )
+          ))}
           {whatsappLink && <a href={whatsappLink.href} className="whatsapp-btn"><WhatsAppIcon />{whatsappLink.label}</a>}
         </nav>
         <MobileNav links={whatsappLink ? [...links, whatsappLink] : links} />

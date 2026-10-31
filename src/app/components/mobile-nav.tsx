@@ -7,6 +7,7 @@ export type NavigationLink = {
   href: string;
   label: string;
   cta?: boolean;
+  onClick?: () => void;
 };
 
 export function MobileNav({ links }: { links: NavigationLink[] }) {
@@ -73,9 +74,20 @@ export function MobileNav({ links }: { links: NavigationLink[] }) {
           </div>
           <nav aria-label="Mobile navigation">
             {links.map((link) => (
-              <a key={link.href} href={link.href} className={link.cta ? "whatsapp-btn" : undefined} tabIndex={isOpen ? 0 : -1} onClick={closeMenu}>
-                {link.cta && <WhatsAppIcon />}{link.label}
-              </a>
+              link.onClick ? (
+                <button
+                  key={link.href}
+                  type="button"
+                  tabIndex={isOpen ? 0 : -1}
+                  onClick={() => { closeMenu(); link.onClick?.(); }}
+                >
+                  {link.label}
+                </button>
+              ) : (
+                <a key={link.href} href={link.href} className={link.cta ? "whatsapp-btn" : undefined} tabIndex={isOpen ? 0 : -1} onClick={closeMenu}>
+                  {link.cta && <WhatsAppIcon />}{link.label}
+                </a>
+              )
             ))}
           </nav>
         </aside>

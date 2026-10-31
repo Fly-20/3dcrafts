@@ -83,6 +83,9 @@ export default function CheckoutPage() {
   return (
     <>
       <main className="mx-auto max-w-md px-6 py-10">
+        <Link href="/cart" className="mb-6 inline-block text-sm text-black/60 hover:underline">
+          ← Back to cart
+        </Link>
         <h1 className="mb-8 text-2xl font-semibold">Checkout</h1>
 
         <ul className="mb-6 flex flex-col gap-3 text-sm">
