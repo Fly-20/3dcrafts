@@ -15,10 +15,10 @@ const primaryLinks: NavigationLink[] = [
   { href: "/shop", label: "Shop" },
 ];
 
-function BrandMark({ light = false }: { light?: boolean }) {
+export function BrandMark({ light = false, size = 32 }: { light?: boolean; size?: number }) {
   const fill = light ? "#F5F4F0" : "#16171A";
   return (
-    <svg width="32" height="32" viewBox="0 0 44 44" aria-hidden="true">
+    <svg width={size} height={size} viewBox="0 0 44 44" aria-hidden="true">
       <rect x="4" y="29" width="36" height="8" rx="1.5" fill={fill} />
       <rect x="9" y="19" width="26" height="8" rx="1.5" fill={fill} />
       <rect x="14" y="9" width="16" height="8" rx="1.5" fill="#E8590C" />

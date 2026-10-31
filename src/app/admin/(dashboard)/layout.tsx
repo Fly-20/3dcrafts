@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { requireAdmin } from "@/lib/admin-auth";
+import { BrandMark } from "@/app/components/shop-nav";
 import { logout } from "../actions";
 import { AdminNav } from "./admin-nav";
 
@@ -8,19 +10,22 @@ import { AdminNav } from "./admin-nav";
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
-  const session = await requireAdmin();
+  await requireAdmin();
 
   return (
     <div className="flex min-h-screen bg-white text-black">
       <aside className="flex w-56 flex-none flex-col justify-between border-r border-black/10 bg-black/[.02] px-4 py-5">
         <div className="flex flex-col gap-6">
-          <span className="px-2 text-sm font-semibold">3DCRAFTS admin</span>
+          <span className="flex items-center gap-2 px-2 text-sm font-semibold">
+            <BrandMark size={20} />
+            3DCRAFTS admin
+          </span>
           <AdminNav />
         </div>
         <div className="flex flex-col gap-2 border-t border-black/10 pt-4 text-xs text-black/60">
-          <span className="px-2">
-            {session.name || session.email} · {session.role}
-          </span>
+          <Link href="/admin/account" className="px-2 py-1 hover:text-black hover:underline">
+            Account
+          </Link>
           <form action={logout}>
             <button type="submit" className="w-full border border-black/20 px-3 py-1.5 text-left hover:border-black">
               Sign out
