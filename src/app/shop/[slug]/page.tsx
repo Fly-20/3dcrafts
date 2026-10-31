@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,6 +6,7 @@ import { createPublicServerClient } from "@/lib/supabase/public";
 import { formatPence } from "@/lib/money";
 import { AddToCartButton } from "./add-to-cart-button";
 import { VariantPicker } from "./variant-picker";
+import { siteConfig } from "../../site-config";
 
 type ProductDetail = {
   id: string;
@@ -17,6 +19,35 @@ type ProductDetail = {
   product_options: { id: string; name: string; sort_order: number; product_option_values: { id: string; value: string; sort_order: number }[] }[];
   product_variants: { id: string; status: string; price_pence: number | null; stock_quantity: number; product_variant_option_values: { option_value_id: string }[] }[];
 };
+
+function plainText(html: string | null, maxLength: number) {
+  const text = (html ?? "").replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
+  return text.length > maxLength ? `${text.slice(0, maxLength - 1).trimEnd()}…` : text;
+}
+
+export async function generateMetadata({ params }: PageProps<"/shop/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const supabase = createPublicServerClient();
+  const { data: product } = await supabase
+    .from("products")
+    .select("title, description, product_images(url, alt, sort_order)")
+    .eq("slug", slug)
+    .eq("status", "active")
+    .maybeSingle();
+
+  if (!product) return { title: "Product not found | 3DCRAFTS", robots: { index: false } };
+
+  const description = plainText(product.description, 160) || `${product.title}, made to order in our ${siteConfig.location.city} workshop.`;
+  const image = [...product.product_images].sort((a, b) => a.sort_order - b.sort_order)[0];
+
+  return {
+    title: `${product.title} | 3DCRAFTS`,
+    description,
+    alternates: { canonical: `/shop/${slug}` },
+    openGraph: { title: product.title, description, url: `/shop/${slug}`, type: "website", ...(image ? { images: [{ url: image.url, alt: image.alt ?? product.title }] } : {}) },
+    twitter: { card: "summary_large_image", title: product.title, description, ...(image ? { images: [image.url] } : {}) },
+  };
+}
 
 export default async function ProductPage({ params }: PageProps<"/shop/[slug]">) {
   const { slug } = await params;
@@ -51,8 +82,33 @@ export default async function ProductPage({ params }: PageProps<"/shop/[slug]">)
   const singleVariantUnitPricePence = singleVariant?.price_pence ?? product.base_price_pence;
   const singleVariantMaxQuantity = singleVariant ? (product.fulfilment_type === "stock" ? singleVariant.stock_quantity : null) : 0;
 
+  const activeVariants = product.product_variants.filter((variant) => variant.status === "active");
+  const variantPrices = activeVariants.map((variant) => variant.price_pence ?? product.base_price_pence);
+  const lowPricePence = variantPrices.length ? Math.min(...variantPrices) : product.base_price_pence;
+  const highPricePence = variantPrices.length ? Math.max(...variantPrices) : product.base_price_pence;
+  const inStock = activeVariants.some((variant) => product.fulfilment_type !== "stock" || variant.stock_quantity > 0);
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: plainText(product.description, 500) || undefined,
+    image: images.map((image) => image.url),
+    brand: { "@type": "Brand", name: siteConfig.name },
+    offers: {
+      "@type": "AggregateOffer",
+      url: `${siteConfig.url}/shop/${slug}`,
+      priceCurrency: "GBP",
+      lowPrice: (lowPricePence / 100).toFixed(2),
+      highPrice: (highPricePence / 100).toFixed(2),
+      offerCount: Math.max(activeVariants.length, 1),
+      availability: inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      seller: { "@type": "Organization", name: siteConfig.name },
+    },
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema).replace(/</g, "\\u003c") }} />
       <main className="product-page">
         <nav aria-label="Breadcrumb" className="product-breadcrumb">
           <Link href="/shop">Shop</Link><span aria-hidden="true">/</span><span>{product.title}</span>

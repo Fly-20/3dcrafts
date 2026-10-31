@@ -4,6 +4,7 @@ import { TrackOrderForm } from "./track-order-form";
 export const metadata: Metadata = {
   title: "Track your order | 3DCRAFTS",
   description: "Look up your 3DCRAFTS order status using your order number and email.",
+  robots: { index: false, follow: false },
 };
 
 export default function TrackOrderPage() {

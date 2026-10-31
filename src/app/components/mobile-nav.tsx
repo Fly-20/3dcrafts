@@ -1,10 +1,12 @@
 "use client";
 
+import { WhatsAppIcon } from "./whatsapp-icon";
 import { useEffect, useRef, useState } from "react";
 
 export type NavigationLink = {
   href: string;
   label: string;
+  cta?: boolean;
 };
 
 export function MobileNav({ links }: { links: NavigationLink[] }) {
@@ -70,9 +72,9 @@ export function MobileNav({ links }: { links: NavigationLink[] }) {
             </button>
           </div>
           <nav aria-label="Mobile navigation">
-            {links.map((link, index) => (
-              <a key={link.href} href={link.href} tabIndex={isOpen ? 0 : -1} onClick={closeMenu}>
-                <span>0{index + 1}</span>{link.label}
+            {links.map((link) => (
+              <a key={link.href} href={link.href} className={link.cta ? "whatsapp-btn" : undefined} tabIndex={isOpen ? 0 : -1} onClick={closeMenu}>
+                {link.cta && <WhatsAppIcon />}{link.label}
               </a>
             ))}
           </nav>

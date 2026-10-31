@@ -18,6 +18,8 @@ export async function POST(request: Request) {
   const email = field(formData, "email");
   const service = field(formData, "service");
   const description = field(formData, "description");
+  const business = shortText(field(formData, "business"), 200);
+  const quantity = shortText(field(formData, "quantity"), 50);
   const files = formData.getAll("files").filter((value): value is File => value instanceof File && value.size > 0);
 
   if (![name, email, service, description].every(Boolean)) {
@@ -41,6 +43,8 @@ export async function POST(request: Request) {
     `Name: ${name}`,
     `Email: ${email}`,
     `Service: ${service}`,
+    ...(business ? [`Business: ${business}`] : []),
+    ...(quantity ? [`Quantity: ${quantity}`] : []),
     "",
     "Project description:",
     description,
@@ -71,6 +75,8 @@ export async function POST(request: Request) {
         { name: "Name", value: shortText(name, 1024), inline: true },
         { name: "Email", value: shortText(email, 1024), inline: true },
         { name: "Service", value: shortText(service, 1024), inline: true },
+        ...(business ? [{ name: "Business", value: business, inline: true }] : []),
+        ...(quantity ? [{ name: "Quantity", value: quantity, inline: true }] : []),
       ],
       footer: { text: files.length ? `${files.length} file(s) attached` : "No files attached" },
     }],

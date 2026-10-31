@@ -3,6 +3,7 @@
 import { ChangeEvent, DragEvent, FormEvent, useRef, useState } from "react";
 
 const services = ["3D printing", "Laser cutting", "Laser engraving", "Not sure yet"];
+const quantities = ["Just one", "2–10", "11–50", "50+", "Regular supply"];
 const allowedExtensions = new Set(["stl", "step", "stp", "svg", "png", "jpg", "jpeg", "webp", "pdf", "doc", "docx", "txt", "rtf", "odt", "csv"]);
 const maxTotalFileSize = 4 * 1024 * 1024;
 const maxFiles = 10;
@@ -71,18 +72,20 @@ export function QuoteForm() {
       <div className="quote-fields">
         <label>Name<input name="name" autoComplete="name" required /></label>
         <label>Email<input name="email" type="email" autoComplete="email" required /></label>
-        <label>Service required<select name="service" defaultValue="" required><option value="" disabled>Select a service</option>{services.map((service) => <option key={service}>{service}</option>)}</select></label>
-        <label className="field-wide">Project description<textarea name="description" rows={5} placeholder="What would you like made? Include materials, finish or other important details." required /></label>
-        <label className={`field-wide file-field drop-zone${isDragging ? " is-dragging" : ""}${files.length ? " has-files" : ""}`} onDragEnter={(event) => { event.preventDefault(); setIsDragging(true); }} onDragOver={(event) => event.preventDefault()} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setIsDragging(false); }} onDrop={handleDrop}>
-          <span className="file-title">Attachments</span>
-          <span className="file-hint">Drag and drop STL, STEP, SVG, PDF, images or documents here, or <strong>browse your device</strong>.</span>
-          <span className="file-limit">Up to 10 files, 4 MB total</span>
+        <label>Business name (optional)<input name="business" autoComplete="organization" /></label>
+        <label>Quantity<select name="quantity" defaultValue={quantities[0]}>{quantities.map((quantity) => <option key={quantity}>{quantity}</option>)}</select></label>
+        <label className="field-wide">Service required<select name="service" defaultValue="" required><option value="" disabled>Select a service</option>{services.map((service) => <option key={service}>{service}</option>)}</select></label>
+        <label className="field-wide">What would you like made?<textarea name="description" rows={4} required /></label>
+        <label className={`field-wide drop-zone${isDragging ? " is-dragging" : ""}${files.length ? " has-files" : ""}`} onDragEnter={(event) => { event.preventDefault(); setIsDragging(true); }} onDragOver={(event) => event.preventDefault()} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setIsDragging(false); }} onDrop={handleDrop}>
+          Add photos, sketches or files
+          <span className="field-hint">JPG, PNG, PDF, STL, STEP, SVG and more · up to 10 files, 4 MB total</span>
           <input ref={fileInputRef} className="file-input" name="files" type="file" multiple accept=".stl,.step,.stp,.svg,.png,.jpg,.jpeg,.webp,.pdf,.doc,.docx,.txt,.rtf,.odt,.csv" onChange={handleFileChange} />
           {files.length > 0 && <span className="selected-files">{files.length} file{files.length === 1 ? "" : "s"} selected: {files.map((file) => file.name).join(", ")}</span>}
         </label>
       </div>
-      <div className="quote-form-footer"><button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Submit message"}</button></div>
+      <button type="submit" className="quote-submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Send for a quote"}</button>
       {status !== "idle" && <p className={`form-status ${status}`} role="status">{message}</p>}
+      <p className="quote-note">We&apos;ll reply with any questions or your quote. No obligation.</p>
     </form>
   );
 }
