@@ -73,8 +73,31 @@ function getServerSnapshot() {
   return SERVER_SNAPSHOT;
 }
 
+/** Whether the mini-cart drawer is open — UI-only, so it's a separate store from cart contents and never touches localStorage. */
+let drawerOpen = false;
+const drawerListeners = new Set<() => void>();
+
+function setDrawerOpen(open: boolean) {
+  drawerOpen = open;
+  drawerListeners.forEach((listener) => listener());
+}
+
+function subscribeDrawer(listener: () => void) {
+  drawerListeners.add(listener);
+  return () => drawerListeners.delete(listener);
+}
+
+function getDrawerSnapshot() {
+  return drawerOpen;
+}
+
+function getServerDrawerSnapshot() {
+  return false;
+}
+
 export function useCart() {
   const current = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const isDrawerOpen = useSyncExternalStore(subscribeDrawer, getDrawerSnapshot, getServerDrawerSnapshot);
 
   const addLine = useCallback((line: Omit<CartLine, "quantity">, quantity: number) => {
     setState((prev) => {
@@ -109,6 +132,9 @@ export function useCart() {
     setState((prev) => ({ ...prev, giftCardCode }));
   }, []);
 
+  const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+
   const itemCount = current.lines.reduce((sum, line) => sum + line.quantity, 0);
 
   return {
@@ -122,5 +148,8 @@ export function useCart() {
     setDiscountCode,
     giftCardCode: current.giftCardCode,
     setGiftCardCode,
+    isDrawerOpen,
+    openDrawer,
+    closeDrawer,
   };
 }

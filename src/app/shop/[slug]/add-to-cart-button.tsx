@@ -1,12 +1,10 @@
 "use client";
 
 import { useId, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useCart, type CartLine } from "@/lib/cart-store";
 
 export function AddToCartButton({ line, maxQuantity, personalisationRequired = false }: { line: Omit<CartLine, "quantity">; maxQuantity: number | null; personalisationRequired?: boolean }) {
-  const { addLine } = useCart();
-  const router = useRouter();
+  const { addLine, openDrawer } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [personalisationText, setPersonalisationText] = useState("");
   const [personalisationError, setPersonalisationError] = useState(false);
@@ -31,7 +29,7 @@ export function AddToCartButton({ line, maxQuantity, personalisationRequired = f
       }
       setPersonalisationError(false);
       addLine({ ...line, personalisationText: personalisationRequired ? personalisationText.trim() : undefined }, quantity);
-      router.push("/cart");
+      openDrawer();
     }}>
       {personalisationRequired && (
         <label className="product-personalisation">

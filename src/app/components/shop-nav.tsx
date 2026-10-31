@@ -7,6 +7,7 @@ import { useCart } from "@/lib/cart-store";
 import { siteConfig } from "../site-config";
 import { WhatsAppIcon } from "./whatsapp-icon";
 import { MobileNav, type NavigationLink } from "./mobile-nav";
+import { CartDrawer } from "./cart-drawer";
 
 const primaryLinks: NavigationLink[] = [
   { href: "/#sectors", label: "Who we make for" },
@@ -98,6 +99,7 @@ export function SiteChrome({ children }: PropsWithChildren) {
       <SiteHeader />
       <div className="flex-1">{children}</div>
       <SiteFooter />
+      <CartDrawer />
     </div>
   );
 }
