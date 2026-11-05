@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { WhatsAppIcon } from "./components/whatsapp-icon";
 import { OrderCounter } from "./components/order-counter";
-import { HeroArt } from "./components/hero-art";
 import { Testimonials } from "./components/testimonials";
 import { QuoteForm } from "./components/quote-form";
 import { siteConfig } from "./site-config";
@@ -83,10 +82,12 @@ export default function Home() {
             <p className="hero-subheading">From idea to finished product</p>
             <p className="hero-lead">Parts, prototypes, displays and personalised products, designed and made for businesses across the UK.</p>
             <div className="hero-actions"><a href="#quote" className="btn btn-accent">Get a free quote</a><a href="#sectors" className="btn btn-dark">Explore our work</a></div>
-            <a href="#reviews" className="proof"><span className="proof-item"><span className="proof-stars" aria-hidden="true">★★★★★</span><span><strong>4.9</strong> from 100+ Etsy reviews</span></span><span className="proof-divider" aria-hidden="true" /><span className="proof-item"><strong><OrderCounter target={650} /></strong> orders delivered</span></a>
+            <a href="#reviews" className="proof"><span className="proof-item"><span className="proof-stars" aria-hidden="true">★★★★★</span><span><strong>4.9</strong> from 100+ Etsy reviews</span></span><span className="proof-divider" aria-hidden="true" /><span className="proof-item"><strong><OrderCounter from={100} target={650} step={10} /></strong> orders delivered</span></a>
             <ul className="checks"><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7" /><circle cx="7.5" cy="17.5" r="1.8" /><circle cx="17.5" cy="17.5" r="1.8" /></svg>UK-wide delivery</li><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z" /><path d="m4 7.5 8 4.5 8-4.5M12 12v9" /></svg>No minimum order</li><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z" /><path d="m13.5 6.5 4 4" /></svg>We design it for you</li></ul>
           </div>
-          <HeroArt />
+          <div className="hero-art">
+            <Image src="/hero-sphere-final.png" alt="Exploded 3D printed sphere in orange, black and cream showing its internal lattice" width={1024} height={768} unoptimized priority />
+          </div>
         </section>
 
         <section className="sectors" id="sectors" aria-labelledby="sectors-title">

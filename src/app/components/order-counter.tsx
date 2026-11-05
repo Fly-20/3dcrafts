@@ -2,22 +2,23 @@
 
 import { useEffect, useState } from "react";
 
-export function OrderCounter({ target, duration = 3000 }: { target: number; duration?: number }) {
-  const [count, setCount] = useState(0);
+export function OrderCounter({ from = 0, target, step = 1, duration = 3000 }: { from?: number; target: number; step?: number; duration?: number }) {
+  const [count, setCount] = useState(from);
 
   useEffect(() => {
     let frame: number;
-    const start = performance.now();
+    const startTime = performance.now();
 
     const tick = (now: number) => {
-      const progress = Math.min((now - start) / duration, 1);
-      setCount(Math.round(progress * target));
+      const progress = Math.min((now - startTime) / duration, 1);
+      const steps = Math.round((progress * (target - from)) / step);
+      setCount(from + steps * step);
       if (progress < 1) frame = requestAnimationFrame(tick);
     };
 
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [target, duration]);
+  }, [from, target, step, duration]);
 
   return <>{count}+</>;
 }
