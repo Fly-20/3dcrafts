@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { WhatsAppIcon } from "./components/whatsapp-icon";
+import { OrderCounter } from "./components/order-counter";
+import { HeroArt } from "./components/hero-art";
 import { Testimonials } from "./components/testimonials";
 import { QuoteForm } from "./components/quote-form";
 import { siteConfig } from "./site-config";
@@ -63,6 +65,7 @@ const faqs = [
   { q: "Is there a minimum order?", a: "No. We make single pieces as well as larger batches." },
   { q: "I don't have a design. Can you help?", a: "Yes. Send a photo, a sketch, some measurements or just a description, and we'll design it for you. You'll approve the design before we make anything." },
   { q: "What files can I send?", a: "Photos, sketches and PDFs are all fine. For ready-made designs we accept STL, STEP and SVG." },
+  { q: "What's the biggest part you can print?", a: "Up to 256 x 256 x 256mm in one piece, the build size of our Bambu Lab P1S printers. Need something bigger? We can print it in parts and assemble it for you." },
   { q: "Do you deliver across the UK?", a: "Yes, anywhere in the UK. Delivery is included in your quote, and you can also collect from our Edinburgh workshop." },
   { q: "Can I order the same thing again later?", a: <>Yes. We keep your design on file, so repeat orders are quick. Just <a href="#quote">get in touch</a> and tell us what you ordered before.</> },
 ];
@@ -80,12 +83,10 @@ export default function Home() {
             <p className="hero-subheading">From idea to finished product</p>
             <p className="hero-lead">Parts, prototypes, displays and personalised products, designed and made for businesses across the UK.</p>
             <div className="hero-actions"><a href="#quote" className="btn btn-accent">Get a free quote</a><a href="#sectors" className="btn btn-dark">Explore our work</a></div>
-            <a href="#reviews" className="proof"><span className="proof-item"><span className="proof-stars" aria-hidden="true">★★★★★</span><span><strong>4.9</strong> from 100+ Etsy reviews</span></span><span className="proof-divider" aria-hidden="true" /><span className="proof-item"><strong>650+</strong> orders delivered</span></a>
+            <a href="#reviews" className="proof"><span className="proof-item"><span className="proof-stars" aria-hidden="true">★★★★★</span><span><strong>4.9</strong> from 100+ Etsy reviews</span></span><span className="proof-divider" aria-hidden="true" /><span className="proof-item"><strong><OrderCounter target={650} /></strong> orders delivered</span></a>
             <ul className="checks"><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7" /><circle cx="7.5" cy="17.5" r="1.8" /><circle cx="17.5" cy="17.5" r="1.8" /></svg>UK-wide delivery</li><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z" /><path d="m4 7.5 8 4.5 8-4.5M12 12v9" /></svg>No minimum order</li><li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z" /><path d="m13.5 6.5 4 4" /></svg>We design it for you</li></ul>
           </div>
-          <div className="hero-art">
-            <Image src="/hero-sphere-final.png" alt="Exploded 3D printed sphere in orange, black and cream showing its internal lattice" width={1024} height={768} unoptimized priority />
-          </div>
+          <HeroArt />
         </section>
 
         <section className="sectors" id="sectors" aria-labelledby="sectors-title">
