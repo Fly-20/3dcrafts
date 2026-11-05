@@ -3,11 +3,12 @@
 import Image from "next/image";
 import { useRef, useState, type MouseEvent } from "react";
 
-const MAX_SHIFT = 18;
+const MAX_SHIFT = 10;
 
 export function HeroArt() {
   const ref = useRef<HTMLDivElement>(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [hovering, setHovering] = useState(false);
 
   const handleMove = (e: MouseEvent<HTMLDivElement>) => {
     const rect = ref.current?.getBoundingClientRect();
@@ -17,8 +18,19 @@ export function HeroArt() {
     setOffset({ x: -relX * MAX_SHIFT * 2, y: -relY * MAX_SHIFT * 2 });
   };
 
+  const handleLeave = () => {
+    setHovering(false);
+    setOffset({ x: 0, y: 0 });
+  };
+
   return (
-    <div ref={ref} className="hero-art" onMouseMove={handleMove} onMouseLeave={() => setOffset({ x: 0, y: 0 })}>
+    <div
+      ref={ref}
+      className={`hero-art${hovering ? " is-hovering" : ""}`}
+      onMouseEnter={() => setHovering(true)}
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+    >
       <Image
         src="/hero-sphere-final.png"
         alt="Exploded 3D printed sphere in orange, black and cream showing its internal lattice"
@@ -26,7 +38,7 @@ export function HeroArt() {
         height={768}
         unoptimized
         priority
-        style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
+        style={hovering ? { transform: `translate(${offset.x}px, ${offset.y}px)` } : undefined}
       />
     </div>
   );
