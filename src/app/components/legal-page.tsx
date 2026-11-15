@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 
-export const legalLastUpdated = "31 October 2026";
+export const legalLastUpdated = "15 November 2026";
 
 export function LegalPage({ title, children }: PropsWithChildren<{ title: string }>) {
   return (

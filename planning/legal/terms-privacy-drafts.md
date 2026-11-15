@@ -2,7 +2,7 @@
 
 *Draft v0.1 · 2026-11-15 · Backlog items **A5** (terms) and **A7** (privacy) · For the owner to review before website go-live (Sun 29 Nov).*
 
-**Status: draft only. Nothing here is live.** The page components (`src/app/terms/page.tsx`, `src/app/returns/page.tsx`, `src/app/privacy/page.tsx`) have not been changed. Once you approve the wording, the edits are mechanical and the "Last updated" date in `src/app/components/legal-page.tsx` (`legalLastUpdated`) should be changed at the same time.
+**Status: approved by the owner and applied to the live pages on 15 Nov 2026** (`src/app/terms/page.tsx`, `src/app/returns/page.tsx`, `src/app/privacy/page.tsx`; "Last updated" set to 15 November 2026). Where a fact was still open, the safer wording was used: no heat figures, no claim that topper sleeves are always fitted, and generic examples instead of brand names. The open points in §6 still need the owner or a solicitor.
 
 This is plain-English drafting, not legal advice. Items marked **⚖️ Solicitor** are worth a short check by a solicitor (or a reputable template service such as a trade body's terms). Items marked **🧾 Your facts** need information only you have.
 

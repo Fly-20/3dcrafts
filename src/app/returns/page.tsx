@@ -20,9 +20,16 @@ export default function ReturnsPage() {
         <li>We pack items carefully. Please check your parcel on arrival and contact us within 48 hours if anything is damaged, with photos of the item and packaging.</li>
       </ul>
 
-      <h2>Custom and personalised items</h2>
-      <p>Items made to your specification or clearly personalised (for example a keyring with your name, or a part made to your design) are not covered by the 14-day right to cancel, because the Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013 exclude them. Once we have started making a custom item we cannot cancel or refund it unless it is faulty or not as described.</p>
-      <p>Before we make a custom piece we will show you the design or details for approval. Please check them carefully, including spelling of any text.</p>
+      <h2>Custom, personalised and made-to-order items</h2>
+      <p>Most of what we sell is made for you after you order. If an item is made to your specification or clearly personalised, the legal 14-day right to change your mind does not apply. This is set out in regulation 28(1)(b) of the Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013. This includes, for example:</p>
+      <ul>
+        <li>items with your name, text, photo, logo or message on them (such as engraved wooden cards and cake toppers);</li>
+        <li>parts made to your measurements, drawings or design files;</li>
+        <li>items made in a size, colour or material you chose specially, where that is not an option we normally sell.</li>
+      </ul>
+      <p>You can cancel a custom order free of charge before we start making it. Once we have started, we cannot cancel or refund it just because you have changed your mind.</p>
+      <p><strong>This does not affect your rights if something goes wrong.</strong> If a custom item arrives faulty, damaged, or not made to the design or specification you approved, we will put it right. See &ldquo;Faulty or incorrect items&rdquo; below.</p>
+      <p>Before we make a custom piece we will show you the design or details to approve. Please check spelling, dates, sizes and colours carefully, because we make exactly what you approve.</p>
 
       <h2>Changing your mind: standard items</h2>
       <p>For items that are not custom or personalised, you can cancel within 14 days of receiving them, without giving a reason. To do so, email <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a> with your order number. You must then send the item back to us within 14 days of telling us you want to cancel, and take reasonable care of it while it is with you. Unless the item was faulty, you pay the cost of returning it. We will refund the price of the item and the standard delivery cost within 14 days of receiving it back, or of receiving proof you have sent it.</p>
