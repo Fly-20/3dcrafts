@@ -10,7 +10,7 @@ type TimelapseDetail = {
   id: string;
   slug: string;
   etsy_order_id: string;
-  customers: { name: string | null; email: string } | null;
+  customers: { name: string | null; email: string | null } | null;
 };
 
 export default async function TimelapseDetailPage({ params }: PageProps<"/admin/timelapses/[id]">) {
@@ -37,7 +37,7 @@ export default async function TimelapseDetailPage({ params }: PageProps<"/admin/
   return (
     <div className="flex max-w-3xl flex-col gap-8">
       <div>
-        <h1 className="text-2xl font-semibold">{timelapse.customers?.name || timelapse.customers?.email}</h1>
+        <h1 className="text-2xl font-semibold">{timelapse.customers?.name || timelapse.customers?.email || "Timelapse"}</h1>
         <p className="text-sm text-black/60">Order #{timelapse.etsy_order_id}</p>
       </div>
 
@@ -48,7 +48,11 @@ export default async function TimelapseDetailPage({ params }: PageProps<"/admin/
           <a href={`/admin/timelapses/${timelapse.id}/label`} className="border border-black bg-black px-4 py-2 text-sm font-medium text-white">
             Download label (PDF)
           </a>
-          <SendTimelapseEmailButton id={timelapse.id} />
+          {timelapse.customers?.email ? (
+            <SendTimelapseEmailButton id={timelapse.id} />
+          ) : (
+            <span className="text-sm text-black/50">No email on file — share it with the QR label.</span>
+          )}
         </div>
       </section>
 

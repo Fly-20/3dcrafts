@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createServerAuthClient } from "@/lib/supabase/auth-server";
 
-type CustomerRow = { id: string; email: string; name: string | null; phone: string | null; tags: string[]; created_at: string };
+type CustomerRow = { id: string; email: string | null; name: string | null; phone: string | null; tags: string[]; created_at: string };
 
 export default async function AdminCustomersPage() {
   const supabase = await createServerAuthClient();
@@ -35,7 +35,7 @@ export default async function AdminCustomersPage() {
               <tr key={customer.id} className="border-b border-black/5">
                 <td className="py-3 pr-4 font-medium">
                   <Link href={`/admin/customers/${customer.id}`} className="hover:underline">
-                    {customer.email}
+                    {customer.email || <span className="text-black/50">No email</span>}
                   </Link>
                 </td>
                 <td className="py-3 pr-4 text-black/60">{customer.name || "—"}</td>

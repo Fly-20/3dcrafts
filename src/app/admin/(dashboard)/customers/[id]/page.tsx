@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { createServerAuthClient } from "@/lib/supabase/auth-server";
 import { addTagAction, removeTagAction } from "../actions";
 
-type Customer = { id: string; email: string; name: string | null; phone: string | null; tags: string[]; created_at: string };
+type Customer = { id: string; email: string | null; name: string | null; phone: string | null; tags: string[]; created_at: string };
 type TimelapseRow = { id: string; slug: string; etsy_order_id: string; created_at: string };
 
 export default async function CustomerDetailPage({ params }: PageProps<"/admin/customers/[id]">) {
@@ -24,7 +24,7 @@ export default async function CustomerDetailPage({ params }: PageProps<"/admin/c
     <div className="flex max-w-2xl flex-col gap-8">
       <div>
         <h1 className="text-2xl font-semibold">{customer.name || customer.email}</h1>
-        <p className="text-sm text-black/60">{customer.email}</p>
+        <p className="text-sm text-black/60">{customer.email || "No email on file"}</p>
         {customer.phone && <p className="text-sm text-black/60">{customer.phone}</p>}
         <p className="text-sm text-black/40">Joined {new Date(customer.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</p>
       </div>

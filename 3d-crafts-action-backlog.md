@@ -59,7 +59,7 @@ Details live in the [HQ technical brief](3d-crafts-hq-technical-brief.md) and th
 
 | # | Item | Who | Priority | Due |
 |---|---|---|---|---|
-| C1 | **Fix time-lapse issues** T1 (4.5 MB upload limit), T2 (guessable links), T3 (email optional) | Me | **P0** | Sun 22 Nov |
+| C1 | **Fix time-lapse issues** T1 (4.5 MB upload limit), T2 (guessable links), T3 (email optional). *Built 15 Nov on branch `claude/distracted-wilson-b8106e`, awaiting your review. Before deploying: back up, then run `supabase/migrations/0006_customers_email_optional.sql`. Video cap is 50 MB, not 100 MB: the Supabase Free plan rejects files over 50 MB (raise later if you move to Pro).* | Me → You (review + run migration) | **P0** | Sun 22 Nov |
 | C2 | Stripe live mode + production webhook registered and tested | You + Me | P1 | Sun 29 Nov |
 | C3 | Upstash rate limiting configured | You + Me | P1 | Sun 29 Nov |
 | C4 | Business/VAT details in `business_settings`; real shipping rates | You | P1 | Sun 29 Nov |
@@ -110,7 +110,7 @@ Details live in the [HQ technical brief](3d-crafts-hq-technical-brief.md) and th
 
 | # | Item | Who | Priority | Due |
 |---|---|---|---|---|
-| G1 | **Phase 0:** backups, HQ navigation shell, pricing library + tests, quote calculator, job time log, migration 0006 (time-lapse fixes are C1) | Me | P1 | Sun 6 Dec |
+| G1 | **Phase 0:** backups, HQ navigation shell, pricing library + tests, quote calculator, job time log, migration 0007 (0006 is taken by the C1 time-lapse fix) | Me | P1 | Sun 6 Dec |
 | G2 | **Phase 1:** quote form → database, Projects, Inbox, approval gate + checks, Discord buttons, Gmail trigger, passive Etsy extension | Me | P2 | Jan |
 | G3 | **Phase 2:** Stripe quote checkout, Etsy receipts, all-channel orders, production queue, materials/stock, time-lapse ↔ projects, keepsake page, Product Lab | Me | P2 | Feb |
 | G4 | **Phase 3:** Marketing → Plan, workshop agent (P2S), renders, captions, calendar, scheduler, consents, attribution | Me | P3 | Mar |

@@ -8,18 +8,39 @@ import type { SupabaseClient } from "@supabase/supabase-js";
  * (website order vs. Etsy order) it came in through. Backfills the name
  * only if it was missing, so it never overwrites a name already on file.
  *
+ * Etsy often doesn't share the buyer's email, so `email` may be empty. With
+ * no email there's nothing reliable to match on (names clash), so a new
+ * name-only customer is created — unless `fallbackCustomerId` is given (e.g.
+ * the customer already linked to the timelapse being edited), which is reused.
+ * If an email is given later and that fallback customer has none yet, the
+ * email is added to it rather than creating a second customer.
+ * Needs migration 0006 (customers.email nullable).
+ *
  * The Stripe webhook has its own upsert-by-email call already
  * (api/webhooks/stripe/route.ts) which always sets the name from the
  * checkout session — left as-is rather than routed through this helper, to
  * avoid changing existing, live payment-path behaviour.
  */
-export async function findOrCreateCustomer(supabase: SupabaseClient, email: string, name?: string | null): Promise<string> {
-  const normalizedEmail = email.trim().toLowerCase();
+export async function findOrCreateCustomer(supabase: SupabaseClient, email: string | null, name?: string | null, fallbackCustomerId?: string | null): Promise<string> {
+  const normalizedEmail = email?.trim().toLowerCase() || null;
+
+  if (!normalizedEmail) {
+    if (fallbackCustomerId) return fallbackCustomerId;
+    const { data: created, error } = await supabase.from("customers").insert({ email: null, name: name || null }).select("id").single();
+    if (error || !created) throw error ?? new Error("Couldn't create customer.");
+    return created.id;
+  }
 
   const { data: existing } = await supabase.from("customers").select("id, name").eq("email", normalizedEmail).maybeSingle();
   if (existing) {
     if (name && !existing.name) await supabase.from("customers").update({ name }).eq("id", existing.id);
     return existing.id;
+  }
+
+  // An email added later to a name-only customer goes onto that same record.
+  if (fallbackCustomerId) {
+    const { data: updated } = await supabase.from("customers").update({ email: normalizedEmail }).eq("id", fallbackCustomerId).is("email", null).select("id").maybeSingle();
+    if (updated) return updated.id;
   }
 
   const { data: created, error } = await supabase.from("customers").insert({ email: normalizedEmail, name: name || null }).select("id").single();
