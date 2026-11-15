@@ -52,7 +52,7 @@ Details live in the [HQ technical brief](3d-crafts-hq-technical-brief.md) and th
 |---|---|---|---|---|
 | B1 | Labour/design at £15/h in all quoting from now (use the brief's examples as a guide) | You | **P0** | now |
 | B2 | Card test: log 10 cards' real minutes; try £18.99 on one card listing; check Large Letter postage | You | **P0** | Sun 22 Nov |
-| B3 | Standalone quote calculator in admin (HQ Phase 0) | Me | P1 | Sun 6 Dec |
+| B3 | 🟡 **Built, in review:** quote calculator in admin, as the CRM **New quote** page (`/admin/crm/new`): paste a customer message, enter grams/hours/minutes, get Standard/Premium/Express prices with floor, profit, quantity breaks and warnings, plus a checked draft reply to copy (never sent). Pricing engine reproduces the brief's examples A–D to the penny (`npm test`). Editable settings at `/admin/pricing`. *Migration 0007 applied to the live database 15 Nov (checked: settings row seeded). Waiting on you: try it on the PR preview, then merge; optionally set `ANTHROPIC_API_KEY` in Vercel for Claude extraction and drafts.* | Me → You | P1 | Sun 6 Dec |
 | B4 | Replace default labour/postage/fees with real data | Both | P2 | after 1 month of logging |
 
 ## C. Website go-live 🚩
@@ -110,7 +110,7 @@ Details live in the [HQ technical brief](3d-crafts-hq-technical-brief.md) and th
 
 | # | Item | Who | Priority | Due |
 |---|---|---|---|---|
-| G1 | **Phase 0:** backups, HQ navigation shell, pricing library + tests, quote calculator, job time log, migration 0007 (0006 is taken by the C1 time-lapse fix) | Me | P1 | Sun 6 Dec |
+| G1 | **Phase 0:** backups, HQ navigation shell, ~~pricing library + tests~~, ~~quote calculator~~, job time log, ~~migration 0007~~ (0006 is taken by the C1 time-lapse fix). *Pricing library, quote calculator and migration 0007 (pricing settings + `projects`/`quotes`/`quote_items`) are built and in review (B3); 0007 **applied 15 Nov**. Still to do: backups, navigation shell, job time log.* | Me | P1 | Sun 6 Dec |
 | G2 | **Phase 1:** quote form → database, Projects, Inbox, approval gate + checks, Discord buttons, Gmail trigger, passive Etsy extension | Me | P2 | Jan |
 | G3 | **Phase 2:** Stripe quote checkout, Etsy receipts, all-channel orders, production queue, materials/stock, time-lapse ↔ projects, keepsake page, Product Lab | Me | P2 | Feb |
 | G4 | **Phase 3:** Marketing → Plan, workshop agent (P2S), renders, captions, calendar, scheduler, consents, attribution | Me | P3 | Mar |

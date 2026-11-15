@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 const navLinks = [
   { href: "/admin", label: "Home" },
+  { href: "/admin/crm", label: "Enquiries" },
   { href: "/admin/orders", label: "Orders" },
   { href: "/admin/products", label: "Products" },
   { href: "/admin/categories", label: "Categories" },
@@ -13,6 +14,7 @@ const navLinks = [
   { href: "/admin/discounts", label: "Discounts" },
   { href: "/admin/gift-cards", label: "Gift cards" },
   { href: "/admin/shipping-rates", label: "Shipping" },
+  { href: "/admin/pricing", label: "Pricing" },
 ];
 
 export function AdminNav() {
