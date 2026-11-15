@@ -25,9 +25,9 @@ Details live in the [HQ technical brief](3d-crafts-hq-technical-brief.md) and th
 | A2 | Get 2 public + product liability insurance quotes | You | **P0** | Fri 20 Nov |
 | A3 | Check Etsy EU product safety (GPSR) settings | You | **P0** | Fri 20 Nov |
 | A4 | Check ICO data protection fee is paid; set the registration number on the site | You | P1 | Fri 27 Nov |
-| A5 | Terms update: custom-item returns exemption, "parts we don't make", design ownership, food-contact wording | Me (draft) → You | P1 | Sun 29 Nov |
+| A5 | Terms update: custom-item returns exemption, "parts we don't make", design ownership, food-contact wording. **Drafted, awaiting review:** [drafts](planning/legal/terms-privacy-drafts.md) | Me (draft) → You | P1 | Sun 29 Nov |
 | A6 | Cake toppers / cookie cutters: food-safe filament + product wording | You | P1 | Sun 29 Nov |
-| A7 | Privacy policy: AI processing + data retention | Me (draft) → You | P2 | before HQ Phase 1 |
+| A7 | Privacy policy: AI processing + data retention. **Drafted, awaiting review:** [drafts](planning/legal/terms-privacy-drafts.md) §5 | Me (draft) → You | P2 | before HQ Phase 1 |
 | A8 | Spares kit (nozzle, build plate, laser lens) | You | P2 | Dec |
 | A9 | Decide on Vercel Pro + Supabase Pro (~$45/month) | You | P1 | before go-live |
 
