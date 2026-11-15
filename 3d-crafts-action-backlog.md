@@ -59,7 +59,7 @@ Details live in the [HQ technical brief](3d-crafts-hq-technical-brief.md) and th
 
 | # | Item | Who | Priority | Due |
 |---|---|---|---|---|
-| C1 | **Fix time-lapse issues** T1 (4.5 MB upload limit), T2 (guessable links), T3 (email optional). *Built and tested 15 Nov on branch `claude/distracted-wilson-b8106e`. Migration 0006 is already applied to Supabase (email optional + the missing "admins can add customers" rule, which had blocked every new time-lapse customer). Tested on dev: 11 MB upload, random link ending, no-email customer, label PDF, public page plays, delete. Left for you: review, merge and deploy. Video cap is 50 MB (Supabase Free plan limit).* | Me → You (review + merge) | **P0** | Sun 22 Nov |
+| C1 | ✅ **Fixed time-lapse issues** T1 (4.5 MB upload limit), T2 (guessable links), T3 (email optional). *Live 15 Nov ([PR #1](https://github.com/Fly-20/3dcrafts/pull/1)). Videos upload straight to Supabase (cap 50 MB, the Free plan limit); new links get a random ending; email is optional. Migration 0006 applied, including the missing "admins can add customers" rule. First real check: on your next Etsy parcel, scan the printed QR label before it goes in the box.* | Me | done | 15 Nov |
 | C2 | Stripe live mode + production webhook registered and tested | You + Me | P1 | Sun 29 Nov |
 | C3 | Upstash rate limiting configured | You + Me | P1 | Sun 29 Nov |
 | C4 | Business/VAT details in `business_settings`; real shipping rates | You | P1 | Sun 29 Nov |
@@ -139,6 +139,6 @@ To be planned in detail in the **Monday 16 Nov session**. Starting points:
 | Area | This week |
 |---|---|
 | **You** (about 6–8 hours plus normal orders) | A1, A2, A3 · B1, B2 · D1–D6 · E1 review · F1 session |
-| **Me** | C1 time-lapse fixes · D7 check-ins · drafts for D3 GBP text and E1 outreach message · F1 research with you |
+| **Me** | ~~C1 time-lapse fixes~~ (done) · D7 check-ins · drafts for D3 GBP text and E1 outreach message · F1 research with you |
 
 **Decided:** go live as sole trader now; switch Stripe and the other accounts to the company when the transfer happens.
