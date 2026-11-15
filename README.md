@@ -18,8 +18,9 @@ The environment template documents Supabase, Stripe, Resend, Discord, site URL a
 - `npx tsc --noEmit` — TypeScript
 - `npm run build` — production build
 - `npm audit --omit=dev` — production dependency advisories
+- `npm test` — unit tests (cart personalisation; pricing engine against the HQ brief's worked examples A–D)
 
-There is currently no automated test script. The historical Stripe test-mode run is recorded in the [Phase 1 technical plan](3d-crafts-phase1-technical-plan.md), but it does not replace fresh end-to-end testing before launch.
+There is no end-to-end test suite yet. The historical Stripe test-mode run is recorded in the [Phase 1 technical plan](3d-crafts-phase1-technical-plan.md), but it does not replace fresh end-to-end testing before launch.
 
 ## Next steps
 
