@@ -4,12 +4,13 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin-auth";
 import { createServerAuthClient } from "@/lib/supabase/auth-server";
-import { findOrCreateCustomer } from "@/lib/customer-identity";
+import { findCustomer } from "@/lib/crm/customers";
 import { getPricingSettings } from "@/lib/pricing/store";
 import { EMPTY_QUOTE_INPUTS, priceQuote, type Channel, type QuoteInputs } from "@/lib/pricing/engine";
 import { checkDraft, extractSpecsWithRules, flagMessage, type DraftIssue, type ExtractedSpecs, type Flag } from "@/lib/pricing/checks";
 import { allowedFigures, priceLines, templateReply } from "@/lib/pricing/reply";
-import { aiEnabled, draftReplyWithClaude, extractSpecsWithClaude } from "@/lib/pricing/ai";
+import { draftReplyWithAi, extractSpecsWithAi } from "@/lib/pricing/ai";
+import { getAiClient } from "@/lib/ai/provider";
 import { PROJECT_STATUSES } from "@/lib/project-status";
 
 const MAX_ENQUIRY_LENGTH = 20_000;
@@ -47,19 +48,20 @@ function readInputs(raw: unknown): QuoteInputs {
 
 export type ReadEnquiryResult = { specs?: ExtractedSpecs; flags?: Flag[]; source?: "ai" | "rules"; notice?: string; error?: string };
 
-/** Pulls specs and missing info out of a pasted message (Claude if configured, else simple rules) and flags risky requests. */
+/** Pulls specs and missing info out of a pasted message (AI if configured, else simple rules) and flags risky requests. */
 export async function readEnquiry(enquiry: string): Promise<ReadEnquiryResult> {
   await requireAdmin();
   const text = String(enquiry ?? "").trim().slice(0, MAX_ENQUIRY_LENGTH);
   if (!text) return { error: "Paste the customer's message first." };
 
   const flags = flagMessage(text);
-  if (aiEnabled()) {
+  const ai = getAiClient();
+  if (ai) {
     try {
-      return { specs: await extractSpecsWithClaude(text), flags, source: "ai" };
+      return { specs: await extractSpecsWithAi(ai, text), flags, source: "ai" };
     } catch (error) {
-      console.error("Claude extraction failed", error);
-      return { specs: extractSpecsWithRules(text), flags, source: "rules", notice: "Claude couldn't read the message, so simple rules were used. Check the details." };
+      console.error("AI extraction failed", error);
+      return { specs: extractSpecsWithRules(text), flags, source: "rules", notice: `${ai.label} couldn't read the message, so simple rules were used. Check the details.` };
     }
   }
   return { specs: extractSpecsWithRules(text), flags, source: "rules" };
@@ -95,9 +97,10 @@ export async function draftReply(payload: {
   let text: string;
   let source: "ai" | "template" = "template";
   let notice: string | undefined;
-  if (aiEnabled() && enquiry.trim()) {
+  const ai = getAiClient();
+  if (ai && enquiry.trim()) {
     try {
-      text = await draftReplyWithClaude({
+      text = await draftReplyWithAi(ai, {
         enquiry,
         channel: inputs.channel,
         customerName,
@@ -107,9 +110,9 @@ export async function draftReply(payload: {
       });
       source = "ai";
     } catch (error) {
-      console.error("Claude draft failed", error);
+      console.error("AI draft failed", error);
       text = fallback();
-      notice = "Claude couldn't draft a reply, so the template was used.";
+      notice = `${ai.label} couldn't draft a reply, so the template was used.`;
     }
   } else {
     text = fallback();
@@ -169,6 +172,8 @@ export async function saveQuote(payload: {
       .single();
     if (error || !project) return { error: error?.message || "Couldn't save the enquiry." };
     projectId = project.id as string;
+    // The pasted message starts the conversation (needs migration 0008; skipped quietly before it).
+    await supabase.from("messages").insert({ project_id: projectId, direction: "in", body: enquiry, created_by: session.userId });
   }
 
   const { data: latest } = await supabase.from("quotes").select("version").eq("project_id", projectId).order("version", { ascending: false }).limit(1).maybeSingle();
@@ -223,27 +228,6 @@ export async function saveQuote(payload: {
 
   revalidatePath("/admin/crm");
   redirect(`/admin/crm/${projectId}`);
-}
-
-/** Matches an existing customer by email, then by Etsy username; otherwise creates one (email optional). */
-async function findCustomer(
-  supabase: Awaited<ReturnType<typeof createServerAuthClient>>,
-  { email, customerName, etsyUsername, channel }: { email: string; customerName: string; etsyUsername: string; channel: Channel },
-): Promise<string> {
-  if (!email && etsyUsername) {
-    const { data: existing } = await supabase.from("customers").select("id, name").ilike("etsy_username", etsyUsername).limit(1).maybeSingle();
-    if (existing) {
-      if (customerName && !existing.name) await supabase.from("customers").update({ name: customerName }).eq("id", existing.id);
-      return existing.id;
-    }
-  }
-  const customerId = await findOrCreateCustomer(supabase, email || null, customerName || etsyUsername || null);
-  const { data: customer } = await supabase.from("customers").select("etsy_username, source").eq("id", customerId).maybeSingle();
-  const update: Record<string, string> = {};
-  if (etsyUsername && !customer?.etsy_username) update.etsy_username = etsyUsername;
-  if (!customer?.source) update.source = channel;
-  if (Object.keys(update).length) await supabase.from("customers").update(update).eq("id", customerId);
-  return customerId;
 }
 
 export async function updateProjectStatus(formData: FormData) {

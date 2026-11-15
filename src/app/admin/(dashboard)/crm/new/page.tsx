@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { createServerAuthClient } from "@/lib/supabase/auth-server";
 import { getPricingSettings } from "@/lib/pricing/store";
-import { aiEnabled } from "@/lib/pricing/ai";
-import { EMPTY_QUOTE_INPUTS, type QuoteInputs } from "@/lib/pricing/engine";
+import { aiConfig } from "@/lib/ai/provider";
+import { EMPTY_QUOTE_INPUTS, type Channel, type QuoteInputs } from "@/lib/pricing/engine";
+import { estimateInputs, normaliseAnalysis } from "@/lib/crm/assistant";
 import { QuoteBuilder, type QuoteBuilderInitial } from "../quote-builder";
 
 export default async function NewQuotePage({ searchParams }: PageProps<"/admin/crm/new">) {
@@ -11,7 +12,7 @@ export default async function NewQuotePage({ searchParams }: PageProps<"/admin/c
   const supabase = await createServerAuthClient();
   const { settings, stored } = await getPricingSettings(supabase);
 
-  // "New version" of an existing enquiry starts from its latest quote.
+  // "New version" of an existing enquiry starts from its latest quote, or the assistant's estimate if there's no quote yet.
   let initial: QuoteBuilderInitial | undefined;
   if (projectId) {
     const { data: project } = await supabase
@@ -23,7 +24,8 @@ export default async function NewQuotePage({ searchParams }: PageProps<"/admin/c
       const quotes = (project.quotes ?? []) as { version: number; inputs: QuoteInputs }[];
       const latest = quotes.sort((a, b) => b.version - a.version)[0];
       const customer = (Array.isArray(project.customers) ? project.customers[0] : project.customers) as { name: string | null; email: string | null; etsy_username: string | null } | null;
-      const specs = (project.specs ?? {}) as QuoteBuilderInitial["specs"];
+      const specs = (project.specs ?? {}) as QuoteBuilderInitial["specs"] & { assistant?: { analysis?: unknown } };
+      const estimate = !latest && specs.assistant?.analysis ? estimateInputs(normaliseAnalysis(specs.assistant.analysis), project.channel as Channel) : null;
       initial = {
         projectId: project.id,
         enquiry: project.enquiry_text,
@@ -33,7 +35,7 @@ export default async function NewQuotePage({ searchParams }: PageProps<"/admin/c
         email: customer?.email ?? "",
         missingInfo: specs.missingInfo ?? [],
         specs,
-        inputs: { ...EMPTY_QUOTE_INPUTS, ...(latest?.inputs ?? {}), channel: project.channel },
+        inputs: { ...EMPTY_QUOTE_INPUTS, ...(latest?.inputs ?? estimate ?? {}), channel: project.channel },
       };
     }
   }
@@ -51,7 +53,7 @@ export default async function NewQuotePage({ searchParams }: PageProps<"/admin/c
           Migration 0007 isn&apos;t applied yet, so this uses the built-in pricing figures and quotes can&apos;t be saved. Pricing and draft replies still work.
         </p>
       )}
-      <QuoteBuilder settings={settings} aiEnabled={aiEnabled()} initial={initial} />
+      <QuoteBuilder settings={settings} aiLabel={aiConfig()?.label ?? null} initial={initial} />
     </div>
   );
 }

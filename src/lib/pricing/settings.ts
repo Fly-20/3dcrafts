@@ -51,6 +51,8 @@ export type PricingSettings = {
   websitePercentFee: number;
   websiteFixedFee: number;
   websiteAcquisition: number;
+  /** Price of the Etsy quote listing a buyer orders before a custom quote. */
+  quoteListingFee: number;
 
   targetMarkup: number;
   floorMarkup: number;
@@ -109,6 +111,7 @@ export const DEFAULT_PRICING_SETTINGS: PricingSettings = {
   websitePercentFee: 0.015,
   websiteFixedFee: 0.2,
   websiteAcquisition: 0.5,
+  quoteListingFee: 1,
 
   targetMarkup: 0.3,
   floorMarkup: 0.1,
@@ -186,6 +189,7 @@ export const PRICING_SETTING_GROUPS: { title: string; fields: SettingField[] }[]
       { key: "websitePercentFee", label: "Website (Stripe) % fee", percent: true },
       { key: "websiteFixedFee", label: "Website fixed fee (£)" },
       { key: "websiteAcquisition", label: "Website acquisition per order (£)" },
+      { key: "quoteListingFee", label: "Etsy quote listing (£)" },
     ],
   },
   {

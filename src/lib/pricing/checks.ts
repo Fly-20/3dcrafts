@@ -100,7 +100,7 @@ export type ExtractedSpecs = {
 
 const NUMBER_WORDS: Record<string, number> = { a: 1, an: 1, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, twelve: 12, twenty: 20, fifty: 50, hundred: 100 };
 
-/** Rough rule-based reading of a customer message, used when there's no ANTHROPIC_API_KEY. */
+/** Rough rule-based reading of a customer message, used when no AI key is set. */
 export function extractSpecsWithRules(text: string): ExtractedSpecs {
   const lower = text.toLowerCase();
 
@@ -137,7 +137,7 @@ export function extractSpecsWithRules(text: string): ExtractedSpecs {
     customerName: signOff?.[1] ?? "",
     etsyUsername: "",
     email,
-    // Rules can't summarise reliably; the owner types a title (Claude fills it when configured).
+    // Rules can't summarise reliably; the owner types a title (the AI fills it when configured).
     summary: "",
     quantity,
     material,
