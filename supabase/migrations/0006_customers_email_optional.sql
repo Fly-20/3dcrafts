@@ -7,3 +7,8 @@
 -- Run this after 0001-0005, before deploying the matching code.
 
 alter table customers alter column email drop not null;
+
+-- 0002 gave admins select/update on customers but never insert, so creating
+-- a time-lapse for a customer not already on file (from a website order)
+-- failed with "Couldn't save the customer record". Found while testing C1.
+create policy "Admins can insert customers" on customers for insert with check (is_admin());
