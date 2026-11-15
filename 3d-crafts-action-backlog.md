@@ -111,7 +111,7 @@ Details live in the [HQ technical brief](3d-crafts-hq-technical-brief.md) and th
 | # | Item | Who | Priority | Due |
 |---|---|---|---|---|
 | G1 | **Phase 0:** backups, HQ navigation shell, ~~pricing library + tests~~, ~~quote calculator~~, job time log, ~~migration 0007~~ (0006 is taken by the C1 time-lapse fix). *Pricing library, quote calculator and migration 0007 (pricing settings + `projects`/`quotes`/`quote_items`) are live (B3, 15 Nov); 0007 applied. Still to do: backups, navigation shell, job time log.* | Me | P1 | Sun 6 Dec |
-| G2 | **Phase 1:** quote form → database, Projects, Inbox, approval gate + checks, Discord buttons, Gmail trigger, passive Etsy extension | Me | P2 | Jan |
+| G2 | **Phase 1:** quote form → database, Projects, Inbox, approval gate + checks, Discord buttons, Gmail trigger, passive Etsy extension. *In review (PR pending): **enquiry assistant**: New enquiry page, one conversation per project (migration 0008 `messages`), AI decides ask vs quote vs confirm vs decline and drafts each reply (Claude or ChatGPT, prices only from the engine, Etsy checks). Messages are pasted in by hand until the Gmail trigger / extension exist.* | Me | P2 | Jan |
 | G3 | **Phase 2:** Stripe quote checkout, Etsy receipts, all-channel orders, production queue, materials/stock, time-lapse ↔ projects, keepsake page, Product Lab | Me | P2 | Feb |
 | G4 | **Phase 3:** Marketing → Plan, workshop agent (P2S), renders, captions, calendar, scheduler, consents, attribution | Me | P3 | Mar |
 | G5 | **Phase 4:** profit/VAT reports, FreeAgent, Amazon import, pricing analytics, auto-slicing | Me | P3 | Apr+ |

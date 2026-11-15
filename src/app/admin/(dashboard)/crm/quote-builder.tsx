@@ -85,7 +85,7 @@ const levelStyles: Record<string, string> = {
   info: "border-black/20 bg-black/[.03] text-black/70",
 };
 
-export function QuoteBuilder({ settings, aiEnabled, initial = blankInitial }: { settings: PricingSettings; aiEnabled: boolean; initial?: QuoteBuilderInitial }) {
+export function QuoteBuilder({ settings, aiLabel, initial = blankInitial }: { settings: PricingSettings; aiLabel: string | null; initial?: QuoteBuilderInitial }) {
   const [enquiry, setEnquiry] = useState(initial.enquiry);
   const [title, setTitle] = useState(initial.title);
   const [customerName, setCustomerName] = useState(initial.customerName);
@@ -141,7 +141,7 @@ export function QuoteBuilder({ settings, aiEnabled, initial = blankInitial }: { 
       const response = await readEnquiry(enquiry);
       if (response.error) return setError(response.error);
       if (response.specs) applySpecs(response.specs);
-      setNotice(response.notice ?? (response.source === "ai" ? "Details filled in by Claude. Check them against the message." : "Details filled in by simple rules. Check them against the message."));
+      setNotice(response.notice ?? (response.source === "ai" ? `Details filled in by ${aiLabel ?? "AI"}. Check them against the message.` : "Details filled in by simple rules. Check them against the message."));
     });
   }
 
@@ -208,9 +208,9 @@ export function QuoteBuilder({ settings, aiEnabled, initial = blankInitial }: { 
               <option value="other">Other (Facebook, in person…)</option>
             </select>
             <button type="button" onClick={onRead} disabled={reading || !enquiry.trim()} className={buttonClass}>
-              {reading ? "Reading…" : aiEnabled ? "Read message with Claude" : "Read message"}
+              {reading ? "Reading…" : aiLabel ? `Read message with ${aiLabel}` : "Read message"}
             </button>
-            {!aiEnabled && <span className="text-xs text-black/40">No ANTHROPIC_API_KEY set: using simple rules and a template reply.</span>}
+            {!aiLabel && <span className="text-xs text-black/40">No AI key set (ANTHROPIC_API_KEY or OPENAI_API_KEY): using simple rules and a template reply.</span>}
           </div>
           {flags.length > 0 && (
             <ul className="flex flex-col gap-2">
@@ -444,7 +444,7 @@ export function QuoteBuilder({ settings, aiEnabled, initial = blankInitial }: { 
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-sm font-semibold">5. Draft reply</h2>
             <button type="button" onClick={onDraft} disabled={drafting} className={buttonClass}>
-              {drafting ? "Drafting…" : draft ? "Redraft" : aiEnabled ? "Draft with Claude" : "Draft from template"}
+              {drafting ? "Drafting…" : draft ? "Redraft" : aiLabel ? `Draft with ${aiLabel}` : "Draft from template"}
             </button>
           </div>
           {draft ? (
@@ -468,7 +468,7 @@ export function QuoteBuilder({ settings, aiEnabled, initial = blankInitial }: { 
                   {copied ? "Copied" : "Copy"}
                 </button>
                 <span className="text-xs text-black/40">
-                  {draftSource === "ai" ? "Written by Claude around the engine's prices. " : ""}Nothing is sent from here: paste it into {inputs.channel === "etsy" ? "Etsy" : "your reply"} and send it yourself.
+                  {draftSource === "ai" ? `Written by ${aiLabel ?? "AI"} around the engine's prices. ` : ""}Nothing is sent from here: paste it into {inputs.channel === "etsy" ? "Etsy" : "your reply"} and send it yourself.
                 </span>
               </div>
             </>
