@@ -7,7 +7,7 @@ type TimelapseRow = {
   slug: string;
   etsy_order_id: string;
   created_at: string;
-  customers: { name: string | null; email: string } | null;
+  customers: { name: string | null; email: string | null } | null;
 };
 
 export default async function AdminTimelapsesPage({ searchParams }: PageProps<"/admin/timelapses">) {
